@@ -1,10 +1,35 @@
-# Nuxt Minimal Starter
+# My Framework Docs (Nuxt 3 + Tailwind CSS)
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+This project is a documentation-style site built with **Nuxt 3** and **Tailwind CSS**.  
+Some directories such as `pages`, `layouts`, and `components` are placed inside the `app/` folder — this is fully supported in Nuxt 3 and helps keep your project organized.
 
-## Setup
+---
 
-Make sure to install dependencies:
+## 🧩 Project structure
+
+```
+my-framework-docs/
+│
+├── app/
+│   ├── pages/          # Application pages (e.g. index.vue, about.vue, etc.)
+│   ├── layouts/        # Layouts wrapping pages (default.vue, etc.)
+│   ├── components/     # Reusable Vue components
+│   └── app.vue         # Root component
+│
+├── assets/
+│   └── css/            # Custom styles (tailwind.css, prism.css)
+│
+├── public/             # Static assets
+├── tailwind.config.js  # Tailwind configuration
+├── nuxt.config.ts      # Nuxt configuration (includes @nuxtjs/tailwindcss module)
+└── package.json
+```
+
+---
+
+## ⚙️ Setup
+
+Install project dependencies:
 
 ```bash
 # npm
@@ -20,9 +45,11 @@ yarn install
 bun install
 ```
 
-## Development Server
+---
 
-Start the development server on `http://localhost:3000`:
+## 🚀 Development server
+
+Start the local dev server at `http://localhost:3000`:
 
 ```bash
 # npm
@@ -38,9 +65,11 @@ yarn dev
 bun run dev
 ```
 
-## Production
+---
 
-Build the application for production:
+## 🏗️ Production
+
+Build the project for production:
 
 ```bash
 # npm
@@ -56,7 +85,7 @@ yarn build
 bun run build
 ```
 
-Locally preview production build:
+Preview the production build locally:
 
 ```bash
 # npm
@@ -72,4 +101,29 @@ yarn preview
 bun run preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+---
+
+## 📘 Notes
+
+- Tailwind CSS is automatically loaded via the `@nuxtjs/tailwindcss` module.  
+- Page, layout, and component files must be placed inside the `app/` directory (not the root).  
+- If you see Tailwind warnings like  
+  _“No utility classes were detected in your source files”_,  
+  check your `tailwind.config.js` to ensure it includes this path:
+
+```js
+content: [
+  "./app/**/*.{vue,js,ts}",
+  "./components/**/*.{js,vue,ts}",
+  "./layouts/**/*.vue",
+  "./pages/**/*.vue",
+  "./plugins/**/*.{js,ts}",
+  "./app.vue",
+  "./error.vue",
+],
+```
+
+---
+
+Check out the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction)  
+and [Tailwind CSS docs](https://tailwindcss.com/docs) for more.
