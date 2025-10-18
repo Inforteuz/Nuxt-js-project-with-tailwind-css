@@ -4,10 +4,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  // 1. BU QATORNI OLIB TASHLANG YOKI KOMMENTGA OLING
+  // 1. REMOVE OR COMMENT THIS LINE
   // css: ['./assets/css/tailwind.css'], 
 
-  // 2. BU BLOKNI TO'LIQ O'CHIRIB TASHLANG
+  // 2. DELETE THIS BLOCK COMPLETELY
   // postcss: {
   //   plugins: {
   //     tailwindcss: {},
@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   //   },
   // },
 
-  // 3. MODULNI SHU YERGA QO'SHING
+  // 3. ADD MODULE HERE
   modules: [
     '@nuxtjs/tailwindcss'
   ],
