@@ -30,7 +30,7 @@
         <h1 class="text-5xl md:text-6xl font-extrabold text-gray-900 mb-4">
           Nuxt 3 Project
           <span class="block text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 to-teal-600">
-            Tayyor Holatda
+            Tayyor holatda
           </span>
         </h1>
         
@@ -236,4 +236,5 @@ useHead({
     { name: 'description', content: 'Nuxt 3 va Tailwind CSS bilan tayyor starter template' }
   ]
 })
+
 </script>
