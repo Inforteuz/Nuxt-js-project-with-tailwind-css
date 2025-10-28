@@ -1,26 +1,22 @@
-import tsconfigPaths from 'vite-tsconfig-paths'
-
+// nuxt.config.ts
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
-  // 1. REMOVE OR COMMENT THIS LINE
-  // css: ['./assets/css/tailwind.css'], 
-
-  // 2. DELETE THIS BLOCK COMPLETELY
-  // postcss: {
-  //   plugins: {
-  //     tailwindcss: {},
-  //     autoprefixer: {},
-  //   },
-  // },
-
-  // 3. ADD MODULE HERE
   modules: [
     '@nuxtjs/tailwindcss'
   ],
 
+  typescript: {
+    shim: false, 
+  },
+
   vite: {
-    plugins: [tsconfigPaths()],
+    resolve: {
+      alias: {},
+    },
+    optimizeDeps: {
+      exclude: ['tsconfig-paths'],
+    },
   },
 })
