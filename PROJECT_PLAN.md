@@ -247,11 +247,11 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 8. ⬜ Serverga deploy (Nginx + Node.js)
 9. ⬜ SSL sertifikat o'rnatish (agar domen bo'lsa)
 
-### 2-bosqich: Backend (KEYINCHALIK)
-1. ⬜ Django loyihasini yaratish
-2. ⬜ PostgreSQL bazasini sozlash
-3. ⬜ REST API endpointlarni yaratish
-4. ⬜ Admin panel
+### 2-bosqich: Backend (QISMAN BAJARILDI)
+1. ✅ Django loyihasini yaratish
+2. ⬜ PostgreSQL bazasini sozlash (Localda SQLite bilan ishlamoqda)
+3. ✅ REST API endpointlarni yaratish
+4. ✅ Admin panel
 5. ⬜ Frontend-Backend integratsiya
 6. ⬜ Xavfsizlik testlari
 7. ⬜ Load testing
