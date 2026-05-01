@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import Document
+from .serializers import DocumentSerializer
 
-# Create your views here.
+class DocumentListView(generics.ListAPIView):
+    queryset = Document.objects.filter(is_active=True)
+    serializer_class = DocumentSerializer

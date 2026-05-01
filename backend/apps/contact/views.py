@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import Appeal
+from .serializers import AppealSerializer
 
-# Create your views here.
+class AppealCreateView(generics.CreateAPIView):
+    queryset = Appeal.objects.all()
+    serializer_class = AppealSerializer
