@@ -1,8 +1,10 @@
 <template>
   <section class="relative min-h-[90vh] flex items-center pt-24 pb-16 overflow-hidden">
-    <!-- Background Image with Parallax effect -->
-    <div class="absolute inset-0 z-0">
-      <img src="/images/hero-bg.png" alt="Andijon viloyati SSB binosi" class="w-full h-full object-cover transform scale-105" />
+    <!-- Carousel Backgrounds -->
+    <div v-for="(slide, index) in slides" :key="index" 
+         class="absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out"
+         :class="currentSlide === index ? 'opacity-100' : 'opacity-0 pointer-events-none'">
+      <img :src="slide.image" :alt="slide.title" class="w-full h-full object-cover transform scale-105" />
       <div class="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/40 mix-blend-multiply"></div>
       <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent"></div>
     </div>
@@ -10,22 +12,29 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full">
       <div class="grid lg:grid-cols-12 gap-12 lg:gap-8 items-center">
         <!-- Text Content -->
-        <div class="lg:col-span-7 text-white scroll-animate">
+        <div class="lg:col-span-7 text-white">
           <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 backdrop-blur-md border border-white/10 text-sm font-medium mb-8 shadow-[0_0_15px_rgba(255,255,255,0.05)]">
             <span class="w-2.5 h-2.5 rounded-full bg-secondary-400 animate-pulse"></span>
             Rasmiy veb-sayt
           </div>
           
-          <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading leading-[1.15] mb-6 tracking-tight text-white drop-shadow-lg">
-            Sog'ligingiz — <br>
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary-300 via-teal-300 to-primary-300">bizning e'tiborimizda</span>
-          </h1>
+          <div class="relative min-h-[220px]">
+            <transition-group name="slide-fade">
+              <div v-for="(slide, index) in slides" :key="'text-'+index" 
+                   v-show="currentSlide === index" class="absolute inset-0">
+                <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading leading-[1.15] mb-6 tracking-tight text-white drop-shadow-lg">
+                  {{ slide.title }} <br>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary-300 via-teal-300 to-primary-300">{{ slide.subtitle }}</span>
+                </h1>
+                
+                <p class="text-lg sm:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed font-light drop-shadow">
+                  {{ slide.desc }}
+                </p>
+              </div>
+            </transition-group>
+          </div>
           
-          <p class="text-lg sm:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed font-light drop-shadow">
-            Andijon viloyati sog'liqni saqlash boshqarmasi aholiga sifatli, tezkor va zamonaviy tibbiy xizmatlarni taqdim etish uchun xizmat qiladi. Sizning salomatligingiz biz uchun muhim.
-          </p>
-          
-          <div class="flex flex-wrap items-center gap-5">
+          <div class="flex flex-wrap items-center gap-5 mt-8">
             <NuxtLink to="/contact" class="px-8 py-4 bg-gradient-to-r from-secondary-500 to-teal-500 hover:from-secondary-400 hover:to-teal-400 text-white rounded-xl font-bold transition-all shadow-[0_0_30px_rgba(20,184,166,0.3)] hover:shadow-[0_0_40px_rgba(20,184,166,0.5)] hover:-translate-y-1 flex items-center gap-2">
               Onlayn murojaat
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
@@ -34,10 +43,27 @@
               Batafsil ma'lumot
             </NuxtLink>
           </div>
+
+          <!-- Carousel Controls -->
+          <div class="flex items-center gap-4 mt-12">
+            <button @click="prevSlide" class="w-12 h-12 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors backdrop-blur">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div class="flex items-center gap-2">
+              <button v-for="(_, index) in slides" :key="'dot-'+index" 
+                      @click="setSlide(index)"
+                      class="h-2 rounded-full transition-all duration-300"
+                      :class="currentSlide === index ? 'w-8 bg-secondary-400' : 'w-2 bg-white/30 hover:bg-white/50'">
+              </button>
+            </div>
+            <button @click="nextSlide" class="w-12 h-12 rounded-full border border-white/20 bg-white/5 hover:bg-white/20 flex items-center justify-center transition-colors backdrop-blur">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </button>
+          </div>
         </div>
         
         <!-- Interactive Glass Cards -->
-        <div class="lg:col-span-5 relative scroll-animate-right">
+        <div class="lg:col-span-5 relative scroll-animate-right hidden lg:block">
           <!-- Decorative glow -->
           <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-72 h-72 bg-secondary-500/20 rounded-full blur-[80px] animate-pulse-slow"></div>
           
@@ -85,4 +111,67 @@
 </template>
 
 <script setup>
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const currentSlide = ref(0)
+const slides = [
+  {
+    image: '/images/hero-bg.png',
+    title: "Sog'ligingiz —",
+    subtitle: "bizning e'tiborimizda",
+    desc: "Andijon viloyati sog'liqni saqlash boshqarmasi aholiga sifatli, tezkor va zamonaviy tibbiy xizmatlarni taqdim etish uchun xizmat qiladi."
+  },
+  {
+    image: '/images/equipment.png',
+    title: "Zamonaviy —",
+    subtitle: "tibbiy uskunalar",
+    desc: "Viloyatimizdagi shifoxonalar eng so'nggi rusumdagi tibbiy jihozlar va texnologiyalar bilan ta'minlanmoqda."
+  },
+  {
+    image: '/images/team.png',
+    title: "Malakali —",
+    subtitle: "shifokorlar jamoasi",
+    desc: "O'z ishining ustasi bo'lgan, xalqaro tajribaga ega shifokorlarimiz tun-u kun sizning salomatligingiz muhofazasida."
+  }
+]
+
+let timer
+onMounted(() => {
+  timer = setInterval(() => {
+    nextSlide()
+  }, 6000)
+})
+
+onUnmounted(() => {
+  clearInterval(timer)
+})
+
+function nextSlide() {
+  currentSlide.value = (currentSlide.value + 1) % slides.length
+}
+
+function prevSlide() {
+  currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length
+}
+
+function setSlide(index) {
+  currentSlide.value = index
+}
 </script>
+
+<style scoped>
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.5s ease-out;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+</style>
