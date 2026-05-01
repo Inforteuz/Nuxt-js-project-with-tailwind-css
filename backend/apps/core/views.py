@@ -1,3 +1,12 @@
-from django.shortcuts import render
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .models import GeneralInfo
+from .serializers import GeneralInfoSerializer
 
-# Create your views here.
+class GeneralInfoAPIView(APIView):
+    def get(self, request):
+        info = GeneralInfo.objects.first()
+        if info:
+            serializer = GeneralInfoSerializer(info)
+            return Response(serializer.data)
+        return Response({})
