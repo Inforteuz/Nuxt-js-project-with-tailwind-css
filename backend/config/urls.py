@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from apps.core.views_guide import admin_guide
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('admin/guide/', admin_guide, name='admin_guide'),
     path('api/v1/', include('apps.core.urls')),
     path('api/v1/', include('apps.news.urls')),
     path('api/v1/', include('apps.leadership.urls')),

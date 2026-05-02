@@ -28,14 +28,14 @@ JAZZMIN_SETTINGS = {
 
     # Yuqori menyu
     "topmenu_links": [
-        {"name": "Saytni ko'rish", "url": "/", "new_window": True},
-        {"name": "API", "url": "/api/v1/", "new_window": True},
+        {"name": "🌐 Saytni ko'rish", "url": "/", "new_window": True},
+        {"name": "📋 Qo'llanma", "url": "/admin/guide/", "new_window": True},
         {"model": "auth.user"},
     ],
 
     # Foydalanuvchi menyusi (o'ng yuqori)
     "usermenu_links": [
-        {"name": "Saytni ko'rish", "url": "/", "new_window": True},
+        {"name": "🌐 Saytni ko'rish", "url": "/", "new_window": True},
     ],
 
     # Yon menyu ko'rsatish
