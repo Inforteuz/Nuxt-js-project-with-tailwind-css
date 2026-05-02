@@ -22,7 +22,7 @@ from apps.core.views_guide import admin_guide
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('admin/guide/', admin_guide, name='admin_guide'),
+    path('qollanma/', admin_guide, name='admin_guide'),
     path('api/v1/', include('apps.core.urls')),
     path('api/v1/', include('apps.news.urls')),
     path('api/v1/', include('apps.leadership.urls')),
@@ -31,6 +31,5 @@ urlpatterns = [
     path('api/v1/', include('apps.contact.urls')),
 ]
 
-if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

@@ -23,19 +23,19 @@ JAZZMIN_SETTINGS = {
     "site_icon": None,
     "welcome_sign": "Xush kelibsiz! Andijon viloyati SSB boshqaruv paneliga",
     "copyright": "Andijon viloyati sog'liqni saqlash boshqarmasi",
-    "search_model": ["news.News", "contact.Appeal"],
+    "search_model": [],
     "user_avatar": None,
 
     # Yuqori menyu
     "topmenu_links": [
-        {"name": "🌐 Saytni ko'rish", "url": "/", "new_window": True},
-        {"name": "📋 Qo'llanma", "url": "/admin/guide/", "new_window": True},
+        {"name": "Saytni ko'rish", "url": "/", "new_window": True, "icon": "fas fa-globe"},
+        {"name": "Qo'llanma", "url": "/qollanma/", "new_window": True, "icon": "fas fa-book"},
         {"model": "auth.user"},
     ],
 
     # Foydalanuvchi menyusi (o'ng yuqori)
     "usermenu_links": [
-        {"name": "🌐 Saytni ko'rish", "url": "/", "new_window": True},
+        {"name": "Saytni ko'rish", "url": "/", "new_window": True},
     ],
 
     # Yon menyu ko'rsatish
