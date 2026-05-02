@@ -60,14 +60,13 @@
           <!-- Language Dropdown -->
           <div class="relative">
             <button @click="langOpen = !langOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors uppercase font-medium">
-              {{ currentLang }}
+              {{ currentLang === 'uz' ? 'O\'zbek' : 'Русский' }}
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             
             <div v-if="langOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-2xl border border-slate-100 py-1 z-50 text-slate-700">
-              <button @click="setLang('O\'zbek (Lot)')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium">O'zbek (Lot)</button>
-              <button @click="setLang('Ўзбек (Кри)')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">Ўзбек (Кри)</button>
-              <button @click="setLang('Русский')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">Русский</button>
+              <button @click="changeLanguage('uz')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium">O'zbek</button>
+              <button @click="changeLanguage('ru')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">Русский</button>
             </div>
           </div>
         </div>
@@ -258,13 +257,12 @@ const isScrolled = ref(false)
 const searchOpen = ref(false)
 const mobileOpen = ref(false)
 
-// Language Settings
-const langOpen = ref(false)
-const currentLang = ref("O'zbek (Lot)")
+const { currentLang, setLanguage, t } = useLanguage()
 
-function setLang(lang) {
-  currentLang.value = lang
+function changeLanguage(lang) {
+  setLanguage(lang)
   langOpen.value = false
+  // Sahifani qayta yuklash shart emas, lekin reactive t() funksiyasi ishlaydi
 }
 
 // BVI Settings (Accessibility)

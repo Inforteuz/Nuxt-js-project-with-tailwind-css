@@ -25,3 +25,21 @@ class GeneralInfo(models.Model):
     def __str__(self):
         return self.name_uz
 
+
+class Banner(models.Model):
+    title_uz = models.CharField(max_length=255, verbose_name="Sarlavha (O'z)")
+    title_ru = models.CharField(max_length=255, verbose_name="Sarlavha (Ru)", blank=True)
+    description_uz = models.TextField(verbose_name="Tavsif (O'z)", blank=True)
+    description_ru = models.TextField(verbose_name="Tavsif (Ru)", blank=True)
+    image = models.ImageField(upload_to="banners/", verbose_name="Rasm")
+    link = models.CharField(max_length=255, verbose_name="Havola", blank=True)
+    order = models.PositiveIntegerField(default=0, verbose_name="Tartib raqami")
+    is_active = models.BooleanField(default=True, verbose_name="Faol")
+
+    class Meta:
+        verbose_name = "Banner"
+        verbose_name_plural = "Bannerlar"
+        ordering = ["order"]
+
+    def __str__(self):
+        return self.title_uz

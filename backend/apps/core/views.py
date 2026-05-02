@@ -1,12 +1,14 @@
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .models import GeneralInfo
-from .serializers import GeneralInfoSerializer
+from rest_framework import viewsets, generics
+from .models import GeneralInfo, Banner
+from .serializers import GeneralInfoSerializer, BannerSerializer
 
-class GeneralInfoAPIView(APIView):
-    def get(self, request):
-        info = GeneralInfo.objects.first()
-        if info:
-            serializer = GeneralInfoSerializer(info)
-            return Response(serializer.data)
-        return Response({})
+class GeneralInfoView(generics.RetrieveAPIView):
+    queryset = GeneralInfo.objects.all()
+    serializer_class = GeneralInfoSerializer
+    
+    def get_object(self):
+        return GeneralInfo.objects.first() or GeneralInfo()
+
+class BannerViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Banner.objects.filter(is_active=True)
+    serializer_class = BannerSerializer

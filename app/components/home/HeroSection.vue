@@ -23,12 +23,12 @@
               <div v-for="(slide, index) in slides" :key="'text-'+index" 
                    v-show="currentSlide === index" class="absolute inset-0">
                 <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold font-heading leading-[1.15] mb-6 tracking-tight text-white drop-shadow-lg">
-                  {{ slide.title }} <br>
-                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary-300 via-teal-300 to-primary-300">{{ slide.subtitle }}</span>
+                  {{ t(slide, 'title') }} <br>
+                  <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary-300 via-teal-300 to-primary-300">{{ t(slide, 'subtitle') }}</span>
                 </h1>
                 
                 <p class="text-lg sm:text-xl text-slate-300 mb-10 max-w-2xl leading-relaxed font-light drop-shadow">
-                  {{ slide.desc }}
+                  {{ t(slide, 'description') }}
                 </p>
               </div>
             </transition-group>
@@ -111,29 +111,41 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
+import { useRuntimeConfig, useFetch } from '#imports'
+
+const config = useRuntimeConfig()
+const { t, currentLang } = useLanguage()
+
+const { data: bannerData, pending } = await useFetch(`${config.public.apiBase}/banners/`)
 
 const currentSlide = ref(0)
-const slides = [
-  {
-    image: '/images/hero-bg.png',
-    title: "Sog'ligingiz —",
-    subtitle: "bizning e'tiborimizda",
-    desc: "Andijon viloyati sog'liqni saqlash boshqarmasi aholiga sifatli, tezkor va zamonaviy tibbiy xizmatlarni taqdim etish uchun xizmat qiladi."
-  },
-  {
-    image: '/images/equipment.png',
-    title: "Zamonaviy —",
-    subtitle: "tibbiy uskunalar",
-    desc: "Viloyatimizdagi shifoxonalar eng so'nggi rusumdagi tibbiy jihozlar va texnologiyalar bilan ta'minlanmoqda."
-  },
-  {
-    image: '/images/team.png',
-    title: "Malakali —",
-    subtitle: "shifokorlar jamoasi",
-    desc: "O'z ishining ustasi bo'lgan, xalqaro tajribaga ega shifokorlarimiz tun-u kun sizning salomatligingiz muhofazasida."
+const slides = computed(() => {
+  if (bannerData.value && bannerData.value.length > 0) {
+    return bannerData.value
   }
-]
+  // Fallback slides
+  return [
+    {
+      image: '/images/hero-bg.png',
+      title_uz: "Sog'ligingiz —",
+      title_ru: "Ваше здоровье —",
+      subtitle_uz: "bizning e'tiborimizda",
+      subtitle_ru: "в нашем внимании",
+      description_uz: "Andijon viloyati sog'liqni saqlash boshqarmasi aholiga sifatli, tezkor va zamonaviy tibbiy xizmatlarni taqdim etish uchun xizmat qiladi.",
+      description_ru: "Управление здравоохранения Андижанской области служит для предоставления населению качественных, оперативных и современных медицинских услуг."
+    },
+    {
+      image: '/images/equipment.png',
+      title_uz: "Zamonaviy —",
+      title_ru: "Современное —",
+      subtitle_uz: "tibbiy uskunalar",
+      subtitle_ru: "медицинское оборудование",
+      description_uz: "Viloyatimizdagi shifoxonalar eng so'nggi rusumdagi tibbiy jihozlar va texnologiyalar bilan ta'minlanmoqda.",
+      description_ru: "Больницы нашей области оснащаются самым современным медицинским оборудованием и технологиями."
+    }
+  ]
+})
 
 let timer
 onMounted(() => {
@@ -147,11 +159,15 @@ onUnmounted(() => {
 })
 
 function nextSlide() {
-  currentSlide.value = (currentSlide.value + 1) % slides.length
+  if (slides.value.length > 0) {
+    currentSlide.value = (currentSlide.value + 1) % slides.value.length
+  }
 }
 
 function prevSlide() {
-  currentSlide.value = (currentSlide.value - 1 + slides.length) % slides.length
+  if (slides.value.length > 0) {
+    currentSlide.value = (currentSlide.value - 1 + slides.value.length) % slides.value.length
+  }
 }
 
 function setSlide(index) {

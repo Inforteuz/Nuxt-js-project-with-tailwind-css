@@ -9,3 +9,9 @@ class GeneralInfoAdmin(admin.ModelAdmin):
         if GeneralInfo.objects.exists():
             return False
         return True
+
+from .models import Banner
+
+@admin.register(Banner)
+class BannerAdmin(admin.ModelAdmin):
+    list_display = ("title_uz", "order", "is_active")
