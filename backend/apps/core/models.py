@@ -2,6 +2,7 @@ from django.db import models
 
 class GeneralInfo(models.Model):
     name_uz = models.CharField(max_length=255, verbose_name="Tashkilot nomi (O'z)")
+    name_kr = models.CharField(max_length=255, verbose_name="Tashkilot nomi (Kr)")
     name_ru = models.CharField(max_length=255, verbose_name="Tashkilot nomi (Ru)", blank=True)
     address = models.TextField(verbose_name="Manzil")
     phone = models.CharField(max_length=50, verbose_name="Telefon raqami")
@@ -28,8 +29,10 @@ class GeneralInfo(models.Model):
 
 class Banner(models.Model):
     title_uz = models.CharField(max_length=255, verbose_name="Sarlavha (O'z)")
+    title_kr = models.CharField(max_length=255, verbose_name="Sarlavha (Kr)")
     title_ru = models.CharField(max_length=255, verbose_name="Sarlavha (Ru)", blank=True)
     description_uz = models.TextField(verbose_name="Tavsif (O'z)", blank=True)
+    description_kr = models.TextField(verbose_name="Tavsif (Kr)", blank=True)
     description_ru = models.TextField(verbose_name="Tavsif (Ru)", blank=True)
     image = models.ImageField(upload_to="banners/", verbose_name="Rasm")
     link = models.CharField(max_length=255, verbose_name="Havola", blank=True)

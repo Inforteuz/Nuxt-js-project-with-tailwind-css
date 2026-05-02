@@ -2,6 +2,7 @@ from django.db import models
 
 class DocumentCategory(models.Model):
     name_uz = models.CharField(max_length=100, verbose_name="Kategoriya nomi (O'z)")
+    name_kr = models.CharField(max_length=100, verbose_name="Kategoriya nomi (Kr)")
     name_ru = models.CharField(max_length=100, verbose_name="Kategoriya nomi (Ru)", blank=True)
     slug = models.SlugField(unique=True)
 
@@ -15,6 +16,7 @@ class DocumentCategory(models.Model):
 class Document(models.Model):
     category = models.ForeignKey(DocumentCategory, on_delete=models.SET_NULL, null=True, related_name='documents', verbose_name="Kategoriya")
     title_uz = models.CharField(max_length=255, verbose_name="Sarlavha (O'z)")
+    title_kr = models.CharField(max_length=255, verbose_name="Sarlavha (Kr)")
     title_ru = models.CharField(max_length=255, verbose_name="Sarlavha (Ru)", blank=True)
     
     number = models.CharField(max_length=50, verbose_name="Hujjat raqami", blank=True)
