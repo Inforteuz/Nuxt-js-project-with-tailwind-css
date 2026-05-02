@@ -19,7 +19,7 @@
         <div class="w-full lg:w-1/3 space-y-6">
           <div v-if="pendingInfo" class="animate-pulse bg-white p-8 rounded-3xl h-64 border border-slate-100"></div>
           
-          <div v-else-if="generalInfo" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 space-y-8">
+          <div v-else class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 space-y-8">
             <h3 class="text-xl font-bold font-heading text-dark mb-6">Aloqa ma'lumotlari</h3>
             
             <div class="flex items-start gap-4">
@@ -28,7 +28,7 @@
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium mb-1">Manzil</p>
-                <p class="text-slate-800 font-medium leading-snug">{{ generalInfo.address || "Manzil kiritilmagan" }}</p>
+                <p class="text-slate-800 font-medium leading-snug">{{ generalInfo?.address || "Andijon shahar, Amir Umarxon ko'chasi, 19-uy" }}</p>
               </div>
             </div>
 
@@ -38,7 +38,7 @@
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium mb-1">Telefon</p>
-                <a :href="`tel:${generalInfo.phone?.replace(/\D/g,'')}`" class="text-slate-800 font-medium hover:text-primary-600 transition-colors">{{ generalInfo.phone || "Telefon kiritilmagan" }}</a>
+                <a :href="`tel:${(generalInfo?.phone || '+9983742284284').replace(/\D/g,'')}`" class="text-slate-800 font-medium hover:text-primary-600 transition-colors">{{ generalInfo?.phone || "(374) 228-42-84" }}</a>
               </div>
             </div>
 
@@ -48,17 +48,17 @@
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium mb-1">Elektron pochta</p>
-                <a :href="`mailto:${generalInfo.email}`" class="text-slate-800 font-medium hover:text-primary-600 transition-colors">{{ generalInfo.email || "Email kiritilmagan" }}</a>
+                <a :href="`mailto:${generalInfo?.email || 'andijon.vssb@ssv.uz'}`" class="text-slate-800 font-medium hover:text-primary-600 transition-colors">{{ generalInfo?.email || "andijon.vssb@ssv.uz" }}</a>
               </div>
             </div>
             
-            <div class="flex items-start gap-4 pt-4 border-t border-slate-100" v-if="generalInfo.work_hours">
+            <div class="flex items-start gap-4 pt-4 border-t border-slate-100" v-if="generalInfo?.work_hours || true">
               <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center flex-shrink-0">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium mb-1">Ish vaqti</p>
-                <p class="text-slate-800 font-medium leading-snug whitespace-pre-line">{{ generalInfo.work_hours }}</p>
+                <p class="text-slate-800 font-medium leading-snug whitespace-pre-line">{{ generalInfo?.work_hours || "Dushanba - Juma: 09:00 - 18:00\nTushlik: 13:00 - 14:00" }}</p>
               </div>
             </div>
 
