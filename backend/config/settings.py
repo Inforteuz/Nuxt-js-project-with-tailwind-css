@@ -27,7 +27,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'unsafe-default-key')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+_allowed_hosts = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = [h for h in _allowed_hosts.split(',') if h] or ['localhost', '127.0.0.1']
 
 # Application definition
 INSTALLED_APPS = [
@@ -62,7 +63,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-CORS_ALLOWED_ORIGINS = os.getenv('CORS_ALLOWED_ORIGINS', '').split(',')
+_cors_origins = os.getenv('CORS_ALLOWED_ORIGINS', '')
+CORS_ALLOWED_ORIGINS = [o for o in _cors_origins.split(',') if o] or ['http://localhost:3000', 'http://127.0.0.1:3000']
 
 ROOT_URLCONF = 'config.urls'
 

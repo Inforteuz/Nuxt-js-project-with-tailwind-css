@@ -4,7 +4,7 @@ from .models import Position, Leader
 class PositionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Position
-        fields = ['id', 'name_uz', 'name_ru']
+        fields = ['id', 'name_uz', 'name_kr', 'name_ru']
 
 class LeaderSerializer(serializers.ModelSerializer):
     position = PositionSerializer()

@@ -1,7 +1,7 @@
 <template>
   <div class="pt-24 pb-20 bg-slate-50 min-h-screen">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      
+
       <div class="text-center mb-16">
         <div class="w-16 h-16 bg-primary-50 text-primary-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
           <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -30,12 +30,12 @@
               <tr v-for="(doc, index) in documents" :key="doc.id" class="hover:bg-slate-50/50 transition-colors group">
                 <td class="py-5 px-6 text-center text-slate-400 font-medium">{{ index + 1 }}</td>
                 <td class="py-5 px-6">
-                  <div class="font-semibold text-dark mb-1 leading-snug">{{ doc.title_uz }}</div>
+                  <div class="font-semibold text-dark mb-1 leading-snug">{{ t(doc, 'title') }}</div>
                   <div class="text-xs text-slate-500" v-if="doc.number">№ {{ doc.number }}</div>
                 </td>
                 <td class="py-5 px-6">
                   <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-slate-100 text-slate-600">
-                    {{ doc.category?.name_uz || 'Hujjat' }}
+                    {{ t(doc.category, 'name') || 'Hujjat' }}
                   </span>
                 </td>
                 <td class="py-5 px-6 text-sm text-slate-600">
@@ -48,7 +48,7 @@
                   <a v-else-if="doc.link" :href="doc.link" target="_blank" class="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition-colors" title="Havolaga o'tish">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                   </a>
-                  <span v-else class="text-slate-300">-</span>
+                  <span v-else class="text-slate-300">—</span>
                 </td>
               </tr>
             </tbody>
@@ -71,5 +71,6 @@ import { useRuntimeConfig, useFetch } from '#imports'
 useHead({ title: "Hujjatlar - Andijon SSB" })
 
 const config = useRuntimeConfig()
+const { t } = useLanguage()
 const { data: documents, pending } = await useFetch(`${config.public.apiBase}/documents/`)
 </script>

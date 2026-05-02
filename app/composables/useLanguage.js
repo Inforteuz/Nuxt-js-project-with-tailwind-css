@@ -1,5 +1,5 @@
 export const useLanguage = () => {
-  const currentLang = useState('language', () => 'uz')
+  const currentLang = useState('language', () => 'uz_lot')
 
   if (process.client) {
     const saved = localStorage.getItem('selected_lang')
@@ -19,6 +19,10 @@ export const useLanguage = () => {
     if (lang === 'ru') {
       return obj[field + '_ru'] || obj[field + '_uz'] || obj[field] || ''
     }
+    if (lang === 'uz_kr') {
+      return obj[field + '_kr'] || obj[field + '_uz'] || obj[field] || ''
+    }
+    // uz_lot (default)
     return obj[field + '_uz'] || obj[field] || ''
   }
 

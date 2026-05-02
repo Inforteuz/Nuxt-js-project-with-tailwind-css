@@ -82,12 +82,13 @@
         <div class="flex items-center justify-between h-16 lg:h-20">
           <!-- Logo -->
           <NuxtLink to="/" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
-              <svg class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
+            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow overflow-hidden">
+              <img v-if="logoUrl" :src="logoUrl" alt="Logo" class="w-full h-full object-contain" />
+              <svg v-else class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
             </div>
             <div class="hidden sm:block">
-              <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight">Andijon viloyati</p>
-              <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight">Sog'liqni saqlash boshqarmasi</p>
+              <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight">{{ siteName.split(' ').slice(0, 2).join(' ') }}</p>
+              <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight">{{ siteName.split(' ').slice(2).join(' ') }}</p>
             </div>
           </NuxtLink>
 
@@ -154,17 +155,18 @@
           <!-- About -->
           <div>
             <div class="flex items-center gap-3 mb-5">
-              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center">
-                <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center overflow-hidden">
+                <img v-if="logoUrl" :src="logoUrl" alt="Logo" class="w-full h-full object-contain" />
+                <svg v-else class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
               </div>
               <div>
-                <p class="font-heading font-bold text-sm">Andijon viloyati</p>
-                <p class="text-xs text-slate-400">Sog'liqni saqlash boshqarmasi</p>
+                <p class="font-heading font-bold text-sm">{{ siteName.split(' ').slice(0, 2).join(' ') }}</p>
+                <p class="text-xs text-slate-400">{{ siteName.split(' ').slice(2).join(' ') }}</p>
               </div>
             </div>
-            <p class="text-sm text-slate-400 leading-relaxed mb-5">O'zbekiston Respublikasi sog'liqni saqlash vazirligi — Andijon viloyati hokimligi sog'liqni saqlash boshqarmasi rasmiy veb-sayti.</p>
+            <p class="text-sm text-slate-400 leading-relaxed mb-5">{{ siteName }} rasmiy veb-sayti.</p>
             <div class="flex items-center gap-3">
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Telegram">
+              <a :href="siteInfo?.telegram || '#'" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Telegram">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
               </a>
               <a href="#" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Facebook">
@@ -210,19 +212,19 @@
                 <div class="w-8 h-8 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <svg class="w-4 h-4 text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                 </div>
-                <p class="text-sm text-slate-400">710000, Andijon shahar, Amir Umarxon ko'chasi, 19-uy</p>
+                <p class="text-sm text-slate-400">{{ siteAddress }}</p>
               </div>
               <div class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-secondary-500/20 flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                 </div>
-                <a href="tel:+998374228-42-84" class="text-sm text-slate-400 hover:text-white transition-colors">(374) 228-42-84</a>
+                <a :href="`tel:${sitePhone}`" class="text-sm text-slate-400 hover:text-white transition-colors">{{ sitePhone }}</a>
               </div>
-              <div class="flex items-center gap-3">
+              <div v-if="siteEmail" class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-accent-500/20 flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-accent-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 </div>
-                <a href="mailto:andijon.vssb@ssv.uz" class="text-sm text-slate-400 hover:text-white transition-colors">andijon.vssb@ssv.uz</a>
+                <a :href="`mailto:${siteEmail}`" class="text-sm text-slate-400 hover:text-white transition-colors">{{ siteEmail }}</a>
               </div>
             </div>
           </div>
@@ -265,9 +267,21 @@ const mobileOpen = ref(false)
 const langOpen = ref(false)
 
 // API data
-const { data: apiNav } = await useFetch(`${config.public.apiBase}/nav/`)
-const { data: apiFooter } = await useFetch(`${config.public.apiBase}/footer-links/`)
-const { data: siteInfo } = await useFetch(`${config.public.apiBase}/info/`)
+const [{ data: apiNav }, { data: apiFooter }, { data: siteInfo }, { data: siteSettings }] = await Promise.all([
+  useFetch(`${config.public.apiBase}/nav/`),
+  useFetch(`${config.public.apiBase}/footer-links/`),
+  useFetch(`${config.public.apiBase}/info/`),
+  useFetch(`${config.public.apiBase}/site-settings/`),
+])
+
+// Dinamik logo URL
+const logoUrl = computed(() => siteSettings.value?.logo || null)
+
+// Dinamik site nomi
+const siteName = computed(() => t(siteInfo.value, 'name') || "Andijon viloyati sog'liqni saqlash boshqarmasi")
+const siteAddress = computed(() => t(siteInfo.value, 'address') || "710000, Andijon shahar, Amir Umarxon ko'chasi, 19-uy")
+const sitePhone = computed(() => siteInfo.value?.phone || '(374) 228-42-84')
+const siteEmail = computed(() => siteInfo.value?.email || 'andijon.vssb@ssv.uz')
 
 function changeLanguage(lang) {
   setLanguage(lang)
@@ -347,6 +361,7 @@ const currentYear = new Date().getFullYear()
 onMounted(() => {
   setTimeout(() => { loading.value = false }, 2200)
   window.addEventListener('scroll', handleScroll)
+  applyDynamicColors()
   nextTick(() => {
     setTimeout(() => {
       document.documentElement.classList.add('js-ready')
@@ -354,6 +369,18 @@ onMounted(() => {
     }, 300)
   })
 })
+
+function applyDynamicColors() {
+  if (typeof document === 'undefined') return
+  const s = siteSettings.value
+  if (!s) return
+  const root = document.documentElement
+  if (s.primary_color) root.style.setProperty('--color-primary', s.primary_color)
+  if (s.secondary_color) root.style.setProperty('--color-secondary', s.secondary_color)
+  if (s.accent_color) root.style.setProperty('--color-accent', s.accent_color)
+}
+
+watch(() => siteSettings.value, applyDynamicColors, { deep: true })
 
 onUnmounted(() => { window.removeEventListener('scroll', handleScroll) })
 

@@ -3,6 +3,28 @@
    Animatsiyalar, effektlar va loader
    ======================================== */
 
+/* ============================================================
+   Dinamik ranglar uchun CSS o'zgaruvchilar
+   app.vue da API dan olingan ranglar shu yerga yoziladi
+   ============================================================ */
+:root {
+  --color-primary: #0A4D8C;
+  --color-primary-dark: #062E54;
+  --color-primary-darker: #041E38;
+  --color-secondary: #10B981;
+  --color-secondary-light: #34D399;
+  --color-accent: #F59E0B;
+}
+
+/* Primary rang qo'llanadigan key elementlar */
+.btn-dynamic-primary {
+  background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark));
+}
+.text-dynamic-primary { color: var(--color-primary); }
+.bg-dynamic-primary { background-color: var(--color-primary); }
+.border-dynamic-primary { border-color: var(--color-primary); }
+.from-dynamic-primary { --tw-gradient-from: var(--color-primary); }
+
 /* --- Page Loader --- */
 .page-loader {
   position: fixed;
