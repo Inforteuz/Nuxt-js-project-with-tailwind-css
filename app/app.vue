@@ -180,7 +180,7 @@
           <div>
             <h3 class="font-heading font-semibold text-white mb-5">Tezkor havolalar</h3>
             <ul class="space-y-3">
-              <li v-for="link in footerLinks" :key="link.to">
+              <li v-for="link in quickLinks" :key="link.to">
                 <NuxtLink :to="link.to" class="text-sm text-slate-400 hover:text-secondary-400 transition-colors flex items-center gap-2">
                   <svg class="w-3 h-3 text-secondary-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                   {{ link.label }}
@@ -253,43 +253,84 @@
 </template>
 
 <script setup>
+const config = useRuntimeConfig()
+const { currentLang, setLanguage, t } = useLanguage()
+
 const loading = ref(true)
 const scrollProgress = ref(0)
 const showBackToTop = ref(false)
 const isScrolled = ref(false)
 const searchOpen = ref(false)
 const mobileOpen = ref(false)
+const langOpen = ref(false)
 
-const { currentLang, setLanguage, t } = useLanguage()
+// API data
+const { data: apiNav } = await useFetch(`${config.public.apiBase}/nav/`)
+const { data: apiFooter } = await useFetch(`${config.public.apiBase}/footer-links/`)
+const { data: siteInfo } = await useFetch(`${config.public.apiBase}/info/`)
 
 function changeLanguage(lang) {
   setLanguage(lang)
   langOpen.value = false
-  // Sahifani qayta yuklash shart emas, lekin reactive t() funksiyasi ishlaydi
 }
+
+// Dynamic nav — API data yoki fallback
+const navItems = computed(() => {
+  if (apiNav.value && apiNav.value.length > 0) {
+    return apiNav.value.map(item => ({ to: item.url, label: t(item, 'label') }))
+  }
+  return [
+    { to: '/', label: 'Bosh sahifa' },
+    { to: '/about', label: 'Boshqarma haqida' },
+    { to: '/leadership', label: 'Rahbariyat' },
+    { to: '/structure', label: 'Tashkiliy tuzilma' },
+    { to: '/news', label: 'Yangiliklar' },
+    { to: '/contact', label: "Bog'lanish" },
+  ]
+})
+
+// Dynamic footer — API data yoki fallback
+const quickLinks = computed(() => {
+  if (apiFooter.value && apiFooter.value.length > 0) {
+    return apiFooter.value.filter(l => l.column === 'quick').map(l => ({
+      to: l.url, label: t(l, 'label'), external: l.is_external
+    }))
+  }
+  return [
+    { to: '/about', label: 'Boshqarma haqida' },
+    { to: '/leadership', label: 'Rahbariyat' },
+    { to: '/structure', label: 'Tashkiliy tuzilma' },
+    { to: '/documents', label: 'Hujjatlar' },
+    { to: '/news', label: 'Yangiliklar' },
+    { to: '/contact', label: "Bog'lanish" },
+  ]
+})
+
+const govLinks = computed(() => {
+  if (apiFooter.value && apiFooter.value.length > 0) {
+    const gov = apiFooter.value.filter(l => l.column === 'gov')
+    if (gov.length > 0) {
+      return gov.map(l => ({ url: l.url, label: t(l, 'label') }))
+    }
+  }
+  return [
+    { url: 'https://gov.uz', label: "O'zbekiston hukumat portali" },
+    { url: 'https://ssv.uz', label: "Sog'liqni saqlash vazirligi" },
+    { url: 'https://my.gov.uz', label: 'Davlat xizmatlari' },
+    { url: 'https://lex.uz', label: "Qonunchilik ma'lumotlari" },
+  ]
+})
 
 // BVI Settings (Accessibility)
 const bviOpen = ref(false)
-const bviSettings = ref({
-  contrast: 'normal',
-  fontSize: 'normal',
-  grayscale: false
-})
+const bviSettings = ref({ contrast: 'normal', fontSize: 'normal', grayscale: false })
 
 function toggleContrast() {
   bviSettings.value.contrast = bviSettings.value.contrast === 'normal' ? 'high' : 'normal'
   applyBvi()
 }
-
-function setFontSize(size) {
-  bviSettings.value.fontSize = size
-  applyBvi()
-}
-
-function toggleGrayscale() {
-  bviSettings.value.grayscale = !bviSettings.value.grayscale
-  applyBvi()
-}
+function setFontSize(size) { bviSettings.value.fontSize = size; applyBvi() }
+function toggleGrayscale() { bviSettings.value.grayscale = !bviSettings.value.grayscale; applyBvi() }
 
 function applyBvi() {
   if (typeof document === 'undefined') return
@@ -302,31 +343,6 @@ function applyBvi() {
 }
 
 const currentYear = new Date().getFullYear()
-
-const navItems = [
-  { to: '/', label: 'Bosh sahifa' },
-  { to: '/about', label: 'Boshqarma haqida' },
-  { to: '/leadership', label: 'Rahbariyat' },
-  { to: '/structure', label: 'Tashkiliy tuzilma' },
-  { to: '/news', label: 'Yangiliklar' },
-  { to: '/contact', label: "Bog'lanish" },
-]
-
-const footerLinks = [
-  { to: '/about', label: 'Boshqarma haqida' },
-  { to: '/leadership', label: 'Rahbariyat' },
-  { to: '/structure', label: 'Tashkiliy tuzilma' },
-  { to: '/documents', label: 'Hujjatlar' },
-  { to: '/news', label: 'Yangiliklar' },
-  { to: '/contact', label: "Bog'lanish" },
-]
-
-const govLinks = [
-  { url: 'https://gov.uz', label: "O'zbekiston hukumat portali" },
-  { url: 'https://ssv.uz', label: "Sog'liqni saqlash vazirligi" },
-  { url: 'https://my.gov.uz', label: 'Davlat xizmatlari' },
-  { url: 'https://lex.uz', label: "Qonunchilik ma'lumotlari" },
-]
 
 onMounted(() => {
   setTimeout(() => { loading.value = false }, 2200)
@@ -358,4 +374,4 @@ function initScrollAnimations() {
   )
   document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-scale').forEach((el) => observer.observe(el))
 }
-</script>
+</script> 
