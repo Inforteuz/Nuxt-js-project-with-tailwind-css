@@ -60,12 +60,15 @@
           <!-- Language Dropdown -->
           <div class="relative">
             <button @click="langOpen = !langOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors uppercase font-medium">
-              {{ currentLang === 'uz' ? 'O\'zbek' : 'Русский' }}
+              <template v-if="currentLang === 'uz_lot'">O'zbek (Lot)</template>
+              <template v-else-if="currentLang === 'uz_kr'">O'zbek (Kril)</template>
+              <template v-else>Русский</template>
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
             
-            <div v-if="langOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-2 w-36 bg-white rounded-xl shadow-2xl border border-slate-100 py-1 z-50 text-slate-700">
-              <button @click="changeLanguage('uz')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium">O'zbek</button>
+            <div v-if="langOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-2xl border border-slate-100 py-1 z-50 text-slate-700">
+              <button @click="changeLanguage('uz_lot')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium">O'zbek (Lot)</button>
+              <button @click="changeLanguage('uz_kr')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">O'zbek (Kril)</button>
               <button @click="changeLanguage('ru')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">Русский</button>
             </div>
           </div>

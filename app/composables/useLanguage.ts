@@ -1,7 +1,7 @@
 import { useState } from '#app'
 
 export const useLanguage = () => {
-  const currentLang = useState('language', () => 'uz') // 'uz' or 'ru'
+  const currentLang = useState('language', () => 'uz_lot') // 'uz_lot', 'uz_kr', 'ru'
 
   const setLanguage = (lang: string) => {
     currentLang.value = lang
@@ -12,8 +12,13 @@ export const useLanguage = () => {
 
   const t = (obj: any, field: string) => {
     if (!obj) return ''
-    const langSuffix = currentLang.value === 'ru' ? '_ru' : '_uz'
-    return obj[field + langSuffix] || obj[field + '_uz'] || obj[field] || ''
+    
+    let suffix = '_uz'
+    if (currentLang.value === 'ru') suffix = '_ru'
+    else if (currentLang.value === 'uz_kr') suffix = '_kr' // Assuming suffix _kr for Krill
+    
+    // Check for specific suffix, then fallback to _uz
+    return obj[field + suffix] || obj[field + '_uz'] || obj[field] || ''
   }
 
   return {
