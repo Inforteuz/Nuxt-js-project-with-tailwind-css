@@ -13,10 +13,10 @@
         </p>
       </div>
 
-      <div class="grid lg:grid-cols-3 gap-10">
+      <div class="flex flex-col lg:flex-row gap-10 max-w-5xl mx-auto">
         
         <!-- Aloqa ma'lumotlari -->
-        <div class="lg:col-span-1 space-y-6">
+        <div class="w-full lg:w-1/3 space-y-6">
           <div v-if="pendingInfo" class="animate-pulse bg-white p-8 rounded-3xl h-64 border border-slate-100"></div>
           
           <div v-else-if="generalInfo" class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 space-y-8">
@@ -66,7 +66,7 @@
         </div>
 
         <!-- Murojaat formasi -->
-        <div class="lg:col-span-2">
+        <div class="w-full lg:w-2/3">
           <div class="bg-white rounded-3xl shadow-sm border border-slate-100 p-8 md:p-10">
             <h3 class="text-2xl font-bold font-heading text-dark mb-6">Onlayn murojaat yo'llash</h3>
             
