@@ -10,6 +10,12 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss'
   ],
 
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.API_BASE_URL || 'http://127.0.0.1:8000/api/v1'
+    }
+  },
+
   app: {
     head: {
       title: "Andijon viloyati sog'liqni saqlash boshqarmasi",

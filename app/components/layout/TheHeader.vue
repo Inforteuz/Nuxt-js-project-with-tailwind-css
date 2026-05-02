@@ -13,8 +13,8 @@
             </svg>
           </div>
           <div class="hidden sm:block">
-            <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight">Andijon viloyati</p>
-            <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight">Sog'liqni saqlash boshqarmasi</p>
+            <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight">{{ generalInfo?.name_uz?.split(' ').slice(0, 2).join(' ') || "Andijon viloyati" }}</p>
+            <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight">{{ generalInfo?.name_uz?.split(' ').slice(2).join(' ') || "Sog'liqni saqlash boshqarmasi" }}</p>
           </div>
         </NuxtLink>
 
@@ -122,11 +122,11 @@
           <div class="space-y-3 text-sm text-slate-500">
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
-              <span>(374) 228-42-84</span>
+              <span>{{ generalInfo?.phone || '(374) 228-42-84' }}</span>
             </div>
             <div class="flex items-center gap-2">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-              <span>andijon.vssb@ssv.uz</span>
+              <span>{{ generalInfo?.email || 'andijon.vssb@ssv.uz' }}</span>
             </div>
           </div>
         </div>
@@ -136,6 +136,11 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig, useFetch } from '#imports'
+
+const config = useRuntimeConfig()
+const { data: generalInfo } = await useFetch(`${config.public.apiBase}/info/`)
+
 const isScrolled = ref(false)
 const searchOpen = ref(false)
 const mobileMenuOpen = ref(false)

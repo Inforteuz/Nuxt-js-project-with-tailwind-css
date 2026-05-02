@@ -10,8 +10,8 @@
       <div class="text-center max-w-3xl mx-auto mb-20 scroll-animate">
         <h2 class="text-sm font-bold text-primary-600 uppercase tracking-widest mb-3">Asosiy vazifalarimiz</h2>
         <h3 class="text-3xl md:text-5xl font-extrabold font-heading text-slate-900 mb-6 tracking-tight">Boshqarma faoliyati</h3>
-        <p class="text-lg text-slate-600 leading-relaxed">
-          Andijon viloyati hokimligi sog'liqni saqlash boshqarmasi viloyatdagi barcha tibbiyot muassasalari faoliyatini muvofiqlashtiruvchi va boshqaruvchi asosiy davlat organidir.
+        <p class="text-lg text-slate-600 leading-relaxed line-clamp-3">
+          {{ generalInfo?.about_uz || "Andijon viloyati hokimligi sog'liqni saqlash boshqarmasi viloyatdagi barcha tibbiyot muassasalari faoliyatini muvofiqlashtiruvchi va boshqaruvchi asosiy davlat organidir." }}
         </p>
       </div>
 
@@ -67,4 +67,8 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig, useFetch } from '#imports'
+
+const config = useRuntimeConfig()
+const { data: generalInfo } = await useFetch(`${config.public.apiBase}/info/`)
 </script>

@@ -18,7 +18,7 @@
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium">Ishonch telefoni</p>
-                <a href="tel:+9983742284284" class="text-lg font-bold text-dark hover:text-primary-500">(374) 228-42-84</a>
+                <a :href="`tel:${generalInfo?.phone?.replace(/\D/g,'')}`" class="text-lg font-bold text-dark hover:text-primary-500">{{ generalInfo?.phone || '(374) 228-42-84' }}</a>
               </div>
             </div>
             
@@ -28,7 +28,7 @@
               </div>
               <div>
                 <p class="text-sm text-slate-500 font-medium">Manzil</p>
-                <p class="text-base font-semibold text-dark">Andijon shahar, Amir Umarxon ko'chasi, 19-uy</p>
+                <p class="text-base font-semibold text-dark">{{ generalInfo?.address || "Andijon shahar, Amir Umarxon ko'chasi, 19-uy" }}</p>
               </div>
             </div>
           </div>
@@ -47,7 +47,8 @@
           <div class="absolute bottom-0 left-0 right-0 p-8">
             <div class="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-xl">
               <h3 class="text-white font-bold text-xl mb-2">Ish vaqti</h3>
-              <ul class="space-y-2 text-slate-200 text-sm">
+              <p v-if="generalInfo?.work_hours" class="text-white whitespace-pre-line">{{ generalInfo.work_hours }}</p>
+              <ul v-else class="space-y-2 text-slate-200 text-sm">
                 <li class="flex justify-between">
                   <span>Dushanba - Juma:</span>
                   <span class="font-semibold text-white">09:00 - 18:00</span>
@@ -70,4 +71,8 @@
 </template>
 
 <script setup>
+import { useRuntimeConfig, useFetch } from '#imports'
+
+const config = useRuntimeConfig()
+const { data: generalInfo } = await useFetch(`${config.public.apiBase}/info/`)
 </script>
