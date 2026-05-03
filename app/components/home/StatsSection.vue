@@ -8,7 +8,7 @@
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
           </div>
           <div class="text-4xl font-bold text-white mb-2 counter-number">240<span class="text-secondary-400">+</span></div>
-          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">Tibbiyot muassasalari</p>
+          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">{{ stat1Label }}</p>
         </div>
 
         <!-- Stat 2 -->
@@ -17,7 +17,7 @@
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
           </div>
           <div class="text-4xl font-bold text-white mb-2 counter-number">5000<span class="text-secondary-400">+</span></div>
-          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">Malakali shifokorlar</p>
+          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">{{ stat2Label }}</p>
         </div>
 
         <!-- Stat 3 -->
@@ -26,7 +26,7 @@
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/></svg>
           </div>
           <div class="text-4xl font-bold text-white mb-2 counter-number">3.2<span class="text-secondary-400">M</span></div>
-          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">Aholi qamrovi</p>
+          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">{{ stat3Label }}</p>
         </div>
 
         <!-- Stat 4 -->
@@ -35,7 +35,7 @@
             <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
           </div>
           <div class="text-4xl font-bold text-white mb-2 counter-number">30<span class="text-secondary-400">+</span></div>
-          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">Yillik dasturlar</p>
+          <p class="text-sm text-slate-300 font-medium uppercase tracking-wider">{{ stat4Label }}</p>
         </div>
       </div>
     </div>
@@ -43,5 +43,26 @@
 </template>
 
 <script setup>
-// Note: In a real scenario we'd use intersection observer to trigger counter animation
+const { currentLang } = useLanguage()
+
+const stat1Label = computed(() => {
+  if (currentLang.value === 'ru') return 'Медицинских учреждений'
+  if (currentLang.value === 'uz_kr') return 'Тиббиёт муассасалари'
+  return 'Tibbiyot muassasalari'
+})
+const stat2Label = computed(() => {
+  if (currentLang.value === 'ru') return 'Квалифицированных врачей'
+  if (currentLang.value === 'uz_kr') return 'Малакали шифокорлар'
+  return 'Malakali shifokorlar'
+})
+const stat3Label = computed(() => {
+  if (currentLang.value === 'ru') return 'Охват населения'
+  if (currentLang.value === 'uz_kr') return 'Аҳоли қамрови'
+  return 'Aholi qamrovi'
+})
+const stat4Label = computed(() => {
+  if (currentLang.value === 'ru') return 'Ежегодных программ'
+  if (currentLang.value === 'uz_kr') return 'Йиллик дастурлар'
+  return 'Yillik dasturlar'
+})
 </script>

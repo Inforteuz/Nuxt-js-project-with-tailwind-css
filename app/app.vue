@@ -1,14 +1,12 @@
 <template>
-  <div>
-    <!-- Page Loader -->
+  <div class="app-root">
     <ClientOnly>
       <UiAppLoader v-if="loading" />
     </ClientOnly>
 
-    <!-- Scroll Progress Indicator -->
     <div class="scroll-indicator" :style="{ width: scrollProgress + '%' }"></div>
 
-    <!-- Gov.uz Banner -->
+    <!-- Gov banner -->
     <div class="gov-banner py-2 px-4 text-white text-center">
       <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
         <div class="flex items-center justify-center gap-3 sm:gap-4 text-xs sm:text-sm flex-wrap">
@@ -21,92 +19,51 @@
           <a href="https://lex.uz" target="_blank" rel="noopener" class="hidden sm:inline hover:text-secondary-400">Qonunchilik</a>
         </div>
         <div class="flex items-center gap-4 text-xs">
-          <!-- Accessibility (BVI) -->
-          <div class="relative">
-            <button @click="bviOpen = !bviOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors" aria-label="Maxsus imkoniyatlar">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-              <span class="hidden md:inline">Maxsus imkoniyatlar</span>
-            </button>
-            
-            <!-- BVI Menu -->
-            <div v-if="bviOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-3 w-64 bg-white rounded-xl shadow-2xl border border-slate-100 p-4 z-50 text-slate-800 text-left">
-              <div class="flex justify-between items-center mb-4">
-                <h4 class="font-bold text-sm">Maxsus imkoniyatlar</h4>
-                <button @click="bviOpen = false" class="text-slate-400 hover:text-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
-              </div>
-              
-              <div class="space-y-4">
-                <div>
-                  <p class="text-xs text-slate-500 mb-2">Ko'rinish</p>
-                  <div class="grid grid-cols-2 gap-2">
-                    <button @click="toggleGrayscale" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.grayscale}">Oq-qora</button>
-                    <button @click="toggleContrast" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.contrast === 'high'}">Kontrast</button>
-                  </div>
-                </div>
-                <div>
-                  <p class="text-xs text-slate-500 mb-2">Shrift o'lchami</p>
-                  <div class="grid grid-cols-3 gap-2">
-                    <button @click="setFontSize('normal')" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'normal'}">A</button>
-                    <button @click="setFontSize('large')" class="px-3 py-2 border border-slate-200 rounded-lg text-base font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'large'}">A</button>
-                    <button @click="setFontSize('xlarge')" class="px-3 py-2 border border-slate-200 rounded-lg text-lg font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'xlarge'}">A</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <span class="text-white/20">|</span>
-          
-          <!-- Language Dropdown -->
+          <!-- Language switcher -->
           <div class="relative">
             <button @click="langOpen = !langOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors uppercase font-medium">
-              <template v-if="currentLang === 'uz_lot'">O'zbek (Lot)</template>
-              <template v-else-if="currentLang === 'uz_kr'">O'zbek (Kril)</template>
-              <template v-else>Русский</template>
+              <template v-if="currentLang === 'uz_lot'">O'zbek</template>
+              <template v-else-if="currentLang === 'uz_kr'">Ўзбек</template>
+              <template v-else>Рус</template>
               <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
             </button>
-            
             <div v-if="langOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-2xl border border-slate-100 py-1 z-50 text-slate-700">
-              <button @click="changeLanguage('uz_lot')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium">O'zbek (Lot)</button>
-              <button @click="changeLanguage('uz_kr')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">O'zbek (Kril)</button>
-              <button @click="changeLanguage('ru')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50">Русский</button>
+              <button @click="changeLanguage('uz_lot')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium" :class="currentLang==='uz_lot' ? 'text-primary-600 bg-primary-50' : ''">O'zbek (Lotin)</button>
+              <button @click="changeLanguage('uz_kr')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50" :class="currentLang==='uz_kr' ? 'text-primary-600 bg-primary-50' : ''">Ўзбек (Кирил)</button>
+              <button @click="changeLanguage('ru')" class="w-full text-left px-4 py-2.5 text-sm hover:bg-slate-50 hover:text-primary-600 transition-colors font-medium border-t border-slate-50" :class="currentLang==='ru' ? 'text-primary-600 bg-primary-50' : ''">Русский</button>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ============= HEADER / NAVBAR ============= -->
+    <!-- HEADER -->
     <header class="sticky top-0 z-30 transition-all duration-300 border-b border-slate-100" :class="isScrolled ? 'navbar-scrolled' : 'bg-white'">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex items-center justify-between h-16 lg:h-20">
-          <!-- Logo -->
-          <NuxtLink to="/" class="flex items-center gap-3 group">
-            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow overflow-hidden">
+          <NuxtLink to="/" class="flex items-center gap-3 group flex-shrink-0">
+            <div class="w-10 h-10 lg:w-12 lg:h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center shadow-md overflow-hidden flex-shrink-0">
               <img v-if="logoUrl" :src="logoUrl" alt="Logo" class="w-full h-full object-contain" />
               <svg v-else class="w-6 h-6 lg:w-7 lg:h-7 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
             </div>
-            <div class="hidden sm:block">
-              <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight">{{ siteName.split(' ').slice(0, 2).join(' ') }}</p>
-              <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight">{{ siteName.split(' ').slice(2).join(' ') }}</p>
+            <div class="hidden sm:block min-w-0">
+              <p class="font-heading font-bold text-sm lg:text-base text-dark leading-tight truncate">{{ siteName.split(' ').slice(0, 3).join(' ') }}</p>
+              <p class="text-xs lg:text-sm text-primary-500 font-medium leading-tight truncate">{{ siteName.split(' ').slice(3).join(' ') }}</p>
             </div>
           </NuxtLink>
 
-          <!-- Desktop Navigation -->
           <nav class="hidden lg:flex items-center gap-1">
             <NuxtLink v-for="item in navItems" :key="item.to" :to="item.to"
-              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors">
+              class="px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors whitespace-nowrap">
               {{ item.label }}
             </NuxtLink>
           </nav>
 
-          <!-- Right Actions -->
-          <div class="flex items-center gap-3">
-            <button @click="searchOpen = !searchOpen" class="w-10 h-10 rounded-lg hover:bg-slate-100 flex items-center justify-center transition-colors" aria-label="Qidirish">
-              <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-            </button>
-            <NuxtLink to="/contact" class="hidden lg:inline-flex btn-primary text-sm">Bog'lanish</NuxtLink>
-            <!-- Mobile hamburger -->
+          <div class="flex items-center gap-2 flex-shrink-0">
+            <NuxtLink to="/contact" class="hidden lg:inline-flex btn-primary text-sm">
+              {{ currentLang === 'ru' ? 'Контакты' : "Bog'lanish" }}
+            </NuxtLink>
+            <!-- Hamburger -->
             <button @click="mobileOpen = !mobileOpen" class="lg:hidden w-10 h-10 rounded-lg hover:bg-slate-100 flex items-center justify-center" aria-label="Menyu">
               <svg v-if="!mobileOpen" class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
               <svg v-else class="w-6 h-6 text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -114,99 +71,111 @@
           </div>
         </div>
       </div>
-
-      <!-- Search bar -->
-      <div v-if="searchOpen" class="border-t border-slate-100 bg-white px-4 py-3">
-        <div class="max-w-2xl mx-auto relative">
-          <input type="text" placeholder="Sayt bo'ylab qidirish..." class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none text-sm" />
-          <svg class="w-5 h-5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        </div>
-      </div>
-
-      <!-- Mobile menu overlay -->
-      <div v-if="mobileOpen" class="fixed inset-0 bg-black/50 z-40" @click="mobileOpen = false"></div>
-      <div class="fixed top-0 right-0 h-full w-80 bg-white z-50 shadow-2xl transform transition-transform duration-300" :class="mobileOpen ? 'translate-x-0' : 'translate-x-full'">
-        <div class="p-6">
-          <div class="flex justify-between items-center mb-8">
-            <p class="font-heading font-bold text-dark">Andijon SSB</p>
-            <button @click="mobileOpen = false" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
-          </div>
-          <nav class="space-y-1">
-            <NuxtLink v-for="item in navItems" :key="item.to" :to="item.to" @click="mobileOpen = false"
-              class="block px-4 py-3 rounded-lg text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium">
-              {{ item.label }}
-            </NuxtLink>
-          </nav>
-        </div>
-      </div>
     </header>
 
-    <!-- ============= MAIN CONTENT ============= -->
+    <!-- MOBILE MENU — HEADER TASHQARISIDA (muhim!) -->
+    <Transition name="overlay-fade">
+      <div v-if="mobileOpen" class="fixed inset-0 bg-black/60 z-40" @click="mobileOpen = false"></div>
+    </Transition>
+    <div
+      class="fixed top-0 right-0 h-full w-72 bg-white z-50 shadow-2xl transition-transform duration-300 ease-in-out overflow-y-auto"
+      :class="mobileOpen ? 'translate-x-0' : 'translate-x-full'"
+    >
+      <div class="p-5">
+        <div class="flex justify-between items-center mb-6">
+          <div class="flex items-center gap-2">
+            <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <img v-if="logoUrl" :src="logoUrl" alt="Logo" class="w-full h-full object-contain" />
+              <svg v-else class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
+            </div>
+            <span class="font-bold text-dark text-sm">Andijon SSB</span>
+          </div>
+          <button @click="mobileOpen = false" class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <nav class="space-y-1 mb-6">
+          <NuxtLink v-for="item in navItems" :key="item.to" :to="item.to" @click="mobileOpen = false"
+            class="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-700 hover:bg-primary-50 hover:text-primary-600 transition-colors font-medium text-sm">
+            {{ item.label }}
+          </NuxtLink>
+        </nav>
+
+        <NuxtLink to="/contact" @click="mobileOpen = false" class="w-full btn-primary text-sm text-center block mb-4">
+          {{ currentLang === 'ru' ? 'Контакты' : "Bog'lanish" }}
+        </NuxtLink>
+
+        <!-- Til tanlash (mobil) -->
+        <div class="border-t border-slate-100 pt-4">
+          <p class="text-xs text-slate-400 mb-2 px-1">{{ currentLang === 'ru' ? 'Язык' : 'Til' }}</p>
+          <div class="flex gap-2">
+            <button @click="changeLanguage('uz_lot')" class="flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-colors"
+              :class="currentLang==='uz_lot' ? 'bg-primary-500 text-white border-primary-500' : 'border-slate-200 text-slate-600'">O'z</button>
+            <button @click="changeLanguage('uz_kr')" class="flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-colors"
+              :class="currentLang==='uz_kr' ? 'bg-primary-500 text-white border-primary-500' : 'border-slate-200 text-slate-600'">Ўз</button>
+            <button @click="changeLanguage('ru')" class="flex-1 py-2 rounded-lg text-xs font-semibold border-2 transition-colors"
+              :class="currentLang==='ru' ? 'bg-primary-500 text-white border-primary-500' : 'border-slate-200 text-slate-600'">Рус</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <main>
       <NuxtPage />
     </main>
 
-    <!-- ============= FOOTER ============= -->
+    <!-- FOOTER -->
     <footer class="footer-gradient text-white">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
-          <!-- About -->
           <div>
             <div class="flex items-center gap-3 mb-5">
-              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center overflow-hidden">
+              <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center overflow-hidden flex-shrink-0">
                 <img v-if="logoUrl" :src="logoUrl" alt="Logo" class="w-full h-full object-contain" />
                 <svg v-else class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M9 2h6v7h7v6h-7v7H9v-7H2V9h7V2z"/></svg>
               </div>
-              <div>
-                <p class="font-heading font-bold text-sm">{{ siteName.split(' ').slice(0, 2).join(' ') }}</p>
-                <p class="text-xs text-slate-400">{{ siteName.split(' ').slice(2).join(' ') }}</p>
-              </div>
+              <p class="font-heading font-bold text-sm leading-snug">{{ siteName }}</p>
             </div>
-            <p class="text-sm text-slate-400 leading-relaxed mb-5">{{ siteName }} rasmiy veb-sayti.</p>
-            <div class="flex items-center gap-3">
-              <a :href="siteInfo?.telegram || '#'" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-primary-500 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Telegram">
+            <div class="flex items-center gap-3 mt-4">
+              <a v-if="siteInfo?.telegram" :href="siteInfo.telegram" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-primary-500 flex items-center justify-center transition-all" aria-label="Telegram">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
               </a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-blue-600 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Facebook">
+              <a v-if="siteInfo?.facebook" :href="siteInfo.facebook" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-blue-600 flex items-center justify-center transition-all" aria-label="Facebook">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
               </a>
-              <a href="#" class="w-9 h-9 rounded-lg bg-white/5 hover:bg-pink-600 flex items-center justify-center transition-all duration-300 hover:-translate-y-0.5" aria-label="Instagram">
+              <a v-if="siteInfo?.instagram" :href="siteInfo.instagram" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-white/10 hover:bg-pink-600 flex items-center justify-center transition-all" aria-label="Instagram">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
               </a>
             </div>
           </div>
 
-          <!-- Quick Links -->
           <div>
-            <h3 class="font-heading font-semibold text-white mb-5">Tezkor havolalar</h3>
+            <h3 class="font-heading font-semibold text-white mb-5">{{ currentLang === 'ru' ? 'Быстрые ссылки' : 'Tezkor havolalar' }}</h3>
             <ul class="space-y-3">
               <li v-for="link in quickLinks" :key="link.to">
                 <NuxtLink :to="link.to" class="text-sm text-slate-400 hover:text-secondary-400 transition-colors flex items-center gap-2">
-                  <svg class="w-3 h-3 text-secondary-500" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
+                  <svg class="w-3 h-3 text-secondary-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd"/></svg>
                   {{ link.label }}
                 </NuxtLink>
               </li>
             </ul>
           </div>
 
-          <!-- Gov Links -->
           <div>
-            <h3 class="font-heading font-semibold text-white mb-5">Davlat saytlari</h3>
+            <h3 class="font-heading font-semibold text-white mb-5">{{ currentLang === 'ru' ? 'Госпорталы' : 'Davlat saytlari' }}</h3>
             <ul class="space-y-3">
               <li v-for="link in govLinks" :key="link.url">
                 <a :href="link.url" target="_blank" rel="noopener" class="text-sm text-slate-400 hover:text-secondary-400 transition-colors flex items-center gap-2">
-                  <svg class="w-3 h-3 text-accent-500" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
+                  <svg class="w-3 h-3 text-accent-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 100 2h2.586l-6.293 6.293a1 1 0 101.414 1.414L15 6.414V9a1 1 0 102 0V4a1 1 0 00-1-1h-5z"/><path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z"/></svg>
                   {{ link.label }}
                 </a>
               </li>
             </ul>
           </div>
 
-          <!-- Contact -->
           <div>
-            <h3 class="font-heading font-semibold text-white mb-5">Aloqa</h3>
+            <h3 class="font-heading font-semibold text-white mb-5">{{ currentLang === 'ru' ? 'Контакты' : 'Aloqa' }}</h3>
             <div class="space-y-4">
               <div class="flex items-start gap-3">
                 <div class="w-8 h-8 rounded-lg bg-primary-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -214,7 +183,7 @@
                 </div>
                 <p class="text-sm text-slate-400">{{ siteAddress }}</p>
               </div>
-              <div class="flex items-center gap-3">
+              <div v-if="sitePhone" class="flex items-center gap-3">
                 <div class="w-8 h-8 rounded-lg bg-secondary-500/20 flex items-center justify-center flex-shrink-0">
                   <svg class="w-4 h-4 text-secondary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>
                 </div>
@@ -230,22 +199,17 @@
           </div>
         </div>
       </div>
-
-      <!-- Bottom Bar -->
       <div class="border-t border-white/10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div class="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <p class="text-xs text-slate-500">© {{ currentYear }} Andijon viloyati sog'liqni saqlash boshqarmasi. Barcha huquqlar himoyalangan.</p>
-            <div class="flex items-center gap-1 text-xs text-slate-600">
-              <span>Ishlab chiquvchi:</span>
-              <a href="https://inforte.uz" target="_blank" rel="noopener" class="text-secondary-500 hover:text-secondary-400 font-medium transition-colors">INFORTE</a>
-            </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <p class="text-xs text-slate-500">© {{ currentYear }} {{ siteName }}. {{ currentLang === 'ru' ? 'Все права защищены.' : 'Barcha huquqlar himoyalangan.' }}</p>
+          <div class="flex items-center gap-1 text-xs text-slate-600">
+            <span>{{ currentLang === 'ru' ? 'Разработчик:' : 'Ishlab chiquvchi:' }}</span>
+            <a href="https://inforte.uz" target="_blank" rel="noopener" class="text-secondary-500 hover:text-secondary-400 font-medium transition-colors">INFORTE</a>
           </div>
         </div>
       </div>
     </footer>
 
-    <!-- Back to Top -->
     <button v-show="showBackToTop" @click="scrollToTop"
       class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-primary-500 text-white shadow-lg hover:bg-primary-600 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center"
       aria-label="Yuqoriga qaytish">
@@ -262,11 +226,9 @@ const loading = ref(true)
 const scrollProgress = ref(0)
 const showBackToTop = ref(false)
 const isScrolled = ref(false)
-const searchOpen = ref(false)
 const mobileOpen = ref(false)
 const langOpen = ref(false)
 
-// API data
 const [{ data: apiNav }, { data: apiFooter }, { data: siteInfo }, { data: siteSettings }] = await Promise.all([
   useFetch(`${config.public.apiBase}/nav/`),
   useFetch(`${config.public.apiBase}/footer-links/`),
@@ -274,25 +236,41 @@ const [{ data: apiNav }, { data: apiFooter }, { data: siteInfo }, { data: siteSe
   useFetch(`${config.public.apiBase}/site-settings/`),
 ])
 
-// Dinamik logo URL
 const logoUrl = computed(() => siteSettings.value?.logo || null)
-
-// Dinamik site nomi
-const siteName = computed(() => t(siteInfo.value, 'name') || "Andijon viloyati sog'liqni saqlash boshqarmasi")
-const siteAddress = computed(() => t(siteInfo.value, 'address') || "710000, Andijon shahar, Amir Umarxon ko'chasi, 19-uy")
-const sitePhone = computed(() => siteInfo.value?.phone || '(374) 228-42-84')
-const siteEmail = computed(() => siteInfo.value?.email || 'andijon.vssb@ssv.uz')
+const siteName = computed(() => t(siteInfo.value, 'name') || "Andijon viloyati SSB")
+const siteAddress = computed(() => t(siteInfo.value, 'address') || "Andijon shahar")
+const sitePhone = computed(() => siteInfo.value?.phone || '')
+const siteEmail = computed(() => siteInfo.value?.email || '')
 
 function changeLanguage(lang) {
   setLanguage(lang)
   langOpen.value = false
 }
 
-// Dynamic nav — API data yoki fallback
-const navItems = computed(() => {
-  if (apiNav.value && apiNav.value.length > 0) {
-    return apiNav.value.map(item => ({ to: item.url, label: t(item, 'label') }))
+// Body scroll bloklanadi mobil menyu ochilganda
+watch(mobileOpen, (val) => {
+  if (typeof document !== 'undefined') {
+    document.body.style.overflow = val ? 'hidden' : ''
   }
+})
+
+const navFallback = computed(() => {
+  if (currentLang.value === 'ru') return [
+    { to: '/', label: 'Главная' },
+    { to: '/about', label: 'Об управлении' },
+    { to: '/leadership', label: 'Руководство' },
+    { to: '/structure', label: 'Структура' },
+    { to: '/news', label: 'Новости' },
+    { to: '/contact', label: 'Контакты' },
+  ]
+  if (currentLang.value === 'uz_kr') return [
+    { to: '/', label: 'Бош саҳифа' },
+    { to: '/about', label: 'Бошқарма ҳақида' },
+    { to: '/leadership', label: 'Раҳбарият' },
+    { to: '/structure', label: 'Тузилма' },
+    { to: '/news', label: 'Янгиликлар' },
+    { to: '/contact', label: 'Боғланиш' },
+  ]
   return [
     { to: '/', label: 'Bosh sahifa' },
     { to: '/about', label: 'Boshqarma haqida' },
@@ -303,29 +281,32 @@ const navItems = computed(() => {
   ]
 })
 
-// Dynamic footer — API data yoki fallback
-const quickLinks = computed(() => {
-  if (apiFooter.value && apiFooter.value.length > 0) {
-    return apiFooter.value.filter(l => l.column === 'quick').map(l => ({
-      to: l.url, label: t(l, 'label'), external: l.is_external
-    }))
+const navItems = computed(() => {
+  if (apiNav.value?.length > 0) {
+    return apiNav.value.map(item => ({ to: item.url, label: t(item, 'label') }))
   }
+  return navFallback.value
+})
+
+const quickLinks = computed(() => {
+  if (apiFooter.value?.length > 0) {
+    const quick = apiFooter.value.filter(l => l.column === 'quick')
+    if (quick.length > 0) return quick.map(l => ({ to: l.url, label: t(l, 'label') }))
+  }
+  const isRu = currentLang.value === 'ru'
   return [
-    { to: '/about', label: 'Boshqarma haqida' },
-    { to: '/leadership', label: 'Rahbariyat' },
-    { to: '/structure', label: 'Tashkiliy tuzilma' },
-    { to: '/documents', label: 'Hujjatlar' },
-    { to: '/news', label: 'Yangiliklar' },
-    { to: '/contact', label: "Bog'lanish" },
+    { to: '/about', label: isRu ? 'Об управлении' : 'Boshqarma haqida' },
+    { to: '/leadership', label: isRu ? 'Руководство' : 'Rahbariyat' },
+    { to: '/structure', label: isRu ? 'Структура' : 'Tashkiliy tuzilma' },
+    { to: '/news', label: isRu ? 'Новости' : 'Yangiliklar' },
+    { to: '/contact', label: isRu ? 'Контакты' : "Bog'lanish" },
   ]
 })
 
 const govLinks = computed(() => {
-  if (apiFooter.value && apiFooter.value.length > 0) {
+  if (apiFooter.value?.length > 0) {
     const gov = apiFooter.value.filter(l => l.column === 'gov')
-    if (gov.length > 0) {
-      return gov.map(l => ({ url: l.url, label: t(l, 'label') }))
-    }
+    if (gov.length > 0) return gov.map(l => ({ url: l.url, label: t(l, 'label') }))
   }
   return [
     { url: 'https://gov.uz', label: "O'zbekiston hukumat portali" },
@@ -335,31 +316,10 @@ const govLinks = computed(() => {
   ]
 })
 
-// BVI Settings (Accessibility)
-const bviOpen = ref(false)
-const bviSettings = ref({ contrast: 'normal', fontSize: 'normal', grayscale: false })
-
-function toggleContrast() {
-  bviSettings.value.contrast = bviSettings.value.contrast === 'normal' ? 'high' : 'normal'
-  applyBvi()
-}
-function setFontSize(size) { bviSettings.value.fontSize = size; applyBvi() }
-function toggleGrayscale() { bviSettings.value.grayscale = !bviSettings.value.grayscale; applyBvi() }
-
-function applyBvi() {
-  if (typeof document === 'undefined') return
-  const html = document.documentElement
-  html.classList.remove('bvi-high-contrast', 'bvi-font-large', 'bvi-font-xlarge', 'bvi-grayscale')
-  if (bviSettings.value.contrast === 'high') html.classList.add('bvi-high-contrast')
-  if (bviSettings.value.fontSize === 'large') html.classList.add('bvi-font-large')
-  if (bviSettings.value.fontSize === 'xlarge') html.classList.add('bvi-font-xlarge')
-  if (bviSettings.value.grayscale) html.classList.add('bvi-grayscale')
-}
-
 const currentYear = new Date().getFullYear()
 
 onMounted(() => {
-  setTimeout(() => { loading.value = false }, 2200)
+  setTimeout(() => { loading.value = false }, 1800)
   window.addEventListener('scroll', handleScroll)
   applyDynamicColors()
   nextTick(() => {
@@ -382,7 +342,10 @@ function applyDynamicColors() {
 
 watch(() => siteSettings.value, applyDynamicColors, { deep: true })
 
-onUnmounted(() => { window.removeEventListener('scroll', handleScroll) })
+onUnmounted(() => {
+  window.removeEventListener('scroll', handleScroll)
+  if (typeof document !== 'undefined') document.body.style.overflow = ''
+})
 
 function handleScroll() {
   const winScroll = document.documentElement.scrollTop
@@ -396,9 +359,18 @@ function scrollToTop() { window.scrollTo({ top: 0, behavior: 'smooth' }) }
 
 function initScrollAnimations() {
   const observer = new IntersectionObserver(
-    (entries) => { entries.forEach((entry) => { if (entry.isIntersecting) entry.target.classList.add('visible') }) },
+    (entries) => { entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') }) },
     { threshold: 0.1, rootMargin: '0px 0px -50px 0px' }
   )
-  document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-scale').forEach((el) => observer.observe(el))
+  document.querySelectorAll('.scroll-animate, .scroll-animate-left, .scroll-animate-right, .scroll-animate-scale')
+    .forEach(el => observer.observe(el))
 }
-</script> 
+</script>
+
+<style>
+.app-root { min-height: 100vh; }
+html, body { overflow-x: hidden !important; max-width: 100vw; }
+
+.overlay-fade-enter-active, .overlay-fade-leave-active { transition: opacity 0.25s ease; }
+.overlay-fade-enter-from, .overlay-fade-leave-to { opacity: 0; }
+</style>
