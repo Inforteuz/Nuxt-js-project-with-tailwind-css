@@ -72,8 +72,8 @@ class Banner(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Faol")
 
     class Meta:
-        verbose_name = "Banner (Karusel)"
-        verbose_name_plural = "Bannerlar (Karusel)"
+        verbose_name = "Bosh sahifa banneri"
+        verbose_name_plural = "Bosh sahifa bannerlari"
         ordering = ["order"]
 
     def __str__(self):
@@ -89,8 +89,8 @@ class NavItem(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Faol")
 
     class Meta:
-        verbose_name = "Navigatsiya elementi"
-        verbose_name_plural = "Navigatsiya (Navbar)"
+        verbose_name = "Yuqori menyu havolasi"
+        verbose_name_plural = "Yuqori menyu havolalari"
         ordering = ["order"]
 
     def __str__(self):
@@ -112,8 +112,8 @@ class FooterLink(models.Model):
     is_active = models.BooleanField(default=True, verbose_name="Faol")
 
     class Meta:
-        verbose_name = "Footer havola"
-        verbose_name_plural = "Footer havolalar"
+        verbose_name = "Pastki menyu havolasi"
+        verbose_name_plural = "Pastki menyu havolalari"
         ordering = ["column", "order"]
 
     def __str__(self):

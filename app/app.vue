@@ -19,6 +19,40 @@
           <a href="https://lex.uz" target="_blank" rel="noopener" class="hidden sm:inline hover:text-secondary-400">Qonunchilik</a>
         </div>
         <div class="flex items-center gap-4 text-xs">
+          <!-- Maxsus imkoniyatlar (BVI) -->
+          <div class="relative">
+            <button @click="bviOpen = !bviOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors" :aria-label="bviLabel">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+              <span class="hidden md:inline">{{ bviLabel }}</span>
+            </button>
+            <div v-if="bviOpen" class="absolute left-1/2 -translate-x-1/2 sm:translate-x-0 sm:left-auto sm:right-0 top-full mt-3 w-64 bg-white rounded-xl shadow-2xl border border-slate-100 p-4 z-50 text-slate-800 text-left">
+              <div class="flex justify-between items-center mb-4">
+                <h4 class="font-bold text-sm">{{ bviLabel }}</h4>
+                <button @click="bviOpen = false" class="text-slate-400 hover:text-slate-600"><svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg></button>
+              </div>
+              <div class="space-y-4">
+                <div>
+                  <p class="text-xs text-slate-500 mb-2">{{ bviViewLabel }}</p>
+                  <div class="grid grid-cols-2 gap-2">
+                    <button @click="toggleGrayscale" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.grayscale}">{{ bviGrayscaleLabel }}</button>
+                    <button @click="toggleContrast" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.contrast}">{{ bviContrastLabel }}</button>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-xs text-slate-500 mb-2">{{ bviFontLabel }}</p>
+                  <div class="grid grid-cols-3 gap-2">
+                    <button @click="setFontSize('normal')" class="px-3 py-2 border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'normal'}">A</button>
+                    <button @click="setFontSize('large')" class="px-3 py-2 border border-slate-200 rounded-lg text-base font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'large'}">A</button>
+                    <button @click="setFontSize('xlarge')" class="px-3 py-2 border border-slate-200 rounded-lg text-lg font-medium hover:bg-slate-50 transition-colors" :class="{'bg-primary-50 border-primary-200 text-primary-700': bviSettings.fontSize === 'xlarge'}">A</button>
+                  </div>
+                </div>
+                <button @click="resetBvi" class="w-full text-xs text-slate-500 hover:text-primary-600 py-1">{{ bviResetLabel }}</button>
+              </div>
+            </div>
+          </div>
+
+          <span class="text-white/20">|</span>
+
           <!-- Language switcher -->
           <div class="relative">
             <button @click="langOpen = !langOpen" class="flex items-center gap-1.5 hover:text-secondary-400 transition-colors uppercase font-medium">
@@ -228,6 +262,30 @@ const showBackToTop = ref(false)
 const isScrolled = ref(false)
 const mobileOpen = ref(false)
 const langOpen = ref(false)
+const bviOpen = ref(false)
+const bviSettings = reactive({ grayscale: false, contrast: false, fontSize: 'normal' })
+
+const bviLabel = computed(() => currentLang.value === 'ru' ? 'Спец. возможности' : currentLang.value === 'uz_kr' ? 'Махсус имкониятлар' : 'Maxsus imkoniyatlar')
+const bviViewLabel = computed(() => currentLang.value === 'ru' ? 'Вид' : currentLang.value === 'uz_kr' ? "Кўриниш" : "Ko'rinish")
+const bviGrayscaleLabel = computed(() => currentLang.value === 'ru' ? 'Ч/Б' : currentLang.value === 'uz_kr' ? 'Оқ-қора' : 'Oq-qora')
+const bviContrastLabel = computed(() => currentLang.value === 'ru' ? 'Контраст' : currentLang.value === 'uz_kr' ? 'Контраст' : 'Kontrast')
+const bviFontLabel = computed(() => currentLang.value === 'ru' ? 'Размер шрифта' : currentLang.value === 'uz_kr' ? "Шрифт ўлчами" : "Shrift o'lchami")
+const bviResetLabel = computed(() => currentLang.value === 'ru' ? 'Сбросить' : currentLang.value === 'uz_kr' ? 'Қайта тиклаш' : 'Qayta tiklash')
+
+function applyBvi() {
+  if (typeof document === 'undefined') return
+  const html = document.documentElement
+  html.classList.toggle('bvi-grayscale', bviSettings.grayscale)
+  html.classList.toggle('bvi-contrast', bviSettings.contrast)
+  html.classList.remove('bvi-font-large', 'bvi-font-xlarge')
+  if (bviSettings.fontSize === 'large') html.classList.add('bvi-font-large')
+  if (bviSettings.fontSize === 'xlarge') html.classList.add('bvi-font-xlarge')
+  try { localStorage.setItem('bvi', JSON.stringify(bviSettings)) } catch (e) {}
+}
+function toggleGrayscale() { bviSettings.grayscale = !bviSettings.grayscale; applyBvi() }
+function toggleContrast() { bviSettings.contrast = !bviSettings.contrast; applyBvi() }
+function setFontSize(size) { bviSettings.fontSize = size; applyBvi() }
+function resetBvi() { bviSettings.grayscale = false; bviSettings.contrast = false; bviSettings.fontSize = 'normal'; applyBvi(); bviOpen.value = false }
 
 const [{ data: apiNav }, { data: apiFooter }, { data: siteInfo }, { data: siteSettings }] = await Promise.all([
   useFetch(`${config.public.apiBase}/nav/`),
@@ -322,6 +380,13 @@ onMounted(() => {
   setTimeout(() => { loading.value = false }, 1800)
   window.addEventListener('scroll', handleScroll)
   applyDynamicColors()
+  try {
+    const saved = JSON.parse(localStorage.getItem('bvi') || '{}')
+    if (saved.grayscale) bviSettings.grayscale = true
+    if (saved.contrast) bviSettings.contrast = true
+    if (saved.fontSize) bviSettings.fontSize = saved.fontSize
+    applyBvi()
+  } catch (e) {}
   nextTick(() => {
     setTimeout(() => {
       document.documentElement.classList.add('js-ready')
@@ -373,4 +438,11 @@ html, body { overflow-x: hidden !important; max-width: 100vw; }
 
 .overlay-fade-enter-active, .overlay-fade-leave-active { transition: opacity 0.25s ease; }
 .overlay-fade-enter-from, .overlay-fade-leave-to { opacity: 0; }
+
+/* Maxsus imkoniyatlar (BVI) */
+html.bvi-grayscale { filter: grayscale(100%); }
+html.bvi-contrast { filter: contrast(140%); }
+html.bvi-grayscale.bvi-contrast { filter: grayscale(100%) contrast(140%); }
+html.bvi-font-large { font-size: 110%; }
+html.bvi-font-xlarge { font-size: 125%; }
 </style>

@@ -1,365 +1,419 @@
 from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponse
 
+
 GUIDE_HTML = """<!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Qo'llanma — Andijon SSB</title>
+<title>Admin qo'llanma</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #333; }
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f5f6fa; color: #2c3e50; line-height: 1.6; }
   .topbar {
-    background: #343a40; color: #fff; padding: 14px 28px;
-    display: flex; align-items: center; gap: 16px; font-size: 16px;
+    background: #2c3e50; color: #fff; padding: 16px 28px;
+    display: flex; align-items: center; gap: 16px; font-size: 15px;
   }
-  .topbar a { color: #adb5bd; text-decoration: none; font-size: 13px; }
-  .topbar a:hover { color: #fff; }
+  .topbar a { color: #ecf0f1; text-decoration: none; font-size: 13px; }
+  .topbar a:hover { color: #3498db; }
+  .topbar .lang-switch button {
+    background: transparent; border: 1px solid #5d6d7e; color: #ecf0f1;
+    padding: 5px 12px; margin-left: 4px; border-radius: 6px;
+    font-size: 12px; cursor: pointer;
+  }
+  .topbar .lang-switch button.active { background: #3498db; border-color: #3498db; }
+  .topbar .lang-switch button:hover { background: #34495e; }
   .container { max-width: 1100px; margin: 30px auto; padding: 0 20px 60px; }
-  h1 { font-size: 26px; color: #1a1a2e; margin-bottom: 6px; }
-  .subtitle { color: #666; font-size: 14px; margin-bottom: 30px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
-  .card {
-    background: #fff; border-radius: 12px; padding: 20px 22px;
-    border: 1px solid #e5e7eb; box-shadow: 0 1px 4px rgba(0,0,0,.06);
-    transition: box-shadow .2s;
+  h1 { font-size: 24px; color: #2c3e50; margin-bottom: 8px; }
+  .subtitle { color: #7f8c8d; font-size: 14px; margin-bottom: 24px; }
+  .section { background: #fff; border-radius: 10px; padding: 22px 26px; margin-bottom: 16px;
+    border: 1px solid #e1e5ea; box-shadow: 0 1px 3px rgba(0,0,0,.04); }
+  .section h2 { font-size: 17px; color: #2c3e50; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 12px; }
+  .section h2 .num {
+    background: #3498db; color: #fff; width: 26px; height: 26px;
+    border-radius: 50%; display: inline-flex; align-items: center;
+    justify-content: center; font-size: 13px; font-weight: 700;
   }
-  .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.1); }
-  .card-header {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 12px;
-    padding-bottom: 12px; border-bottom: 1px solid #f3f4f6;
-  }
-  .icon {
-    width: 44px; height: 44px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 20px; flex-shrink: 0;
-  }
-  .card-title { font-size: 15px; font-weight: 700; color: #1a1a2e; }
-  .card-link { font-size: 12px; color: #6b7280; margin-top: 2px; }
-  .card-link a { color: #3b82f6; text-decoration: none; }
-  .card-link a:hover { text-decoration: underline; }
-  .affects { margin-top: 10px; }
-  .affects-title { font-size: 11px; font-weight: 700; text-transform: uppercase;
-    letter-spacing: .5px; color: #9ca3af; margin-bottom: 6px; }
-  .tag {
-    display: inline-block; background: #eff6ff; color: #1d4ed8;
-    border: 1px solid #bfdbfe; border-radius: 20px;
-    font-size: 11px; padding: 2px 10px; margin: 2px 3px 2px 0;
-  }
-  .tag.green { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
-  .tag.yellow { background: #fffbeb; color: #92400e; border-color: #fde68a; }
-  .tag.red { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
-  .tag.purple { background: #faf5ff; color: #7e22ce; border-color: #e9d5ff; }
-  .steps { margin-top: 10px; padding-left: 0; list-style: none; }
-  .steps li { font-size: 13px; color: #4b5563; padding: 3px 0 3px 18px; position: relative; line-height: 1.5; }
-  .steps li::before { content: "→"; position: absolute; left: 0; color: #9ca3af; }
-  .section-divider {
-    margin: 32px 0 16px; font-size: 13px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px; color: #9ca3af;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .section-divider::after { content: ""; flex: 1; height: 1px; background: #e5e7eb; }
-  .color-demo {
-    display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap;
-  }
-  .color-swatch {
-    display: flex; align-items: center; gap: 6px; font-size: 12px; color: #555;
-  }
-  .swatch {
-    width: 28px; height: 28px; border-radius: 6px; border: 2px solid #ddd;
-  }
+  .section .where { color: #7f8c8d; font-size: 12px; margin-bottom: 12px; padding-left: 38px; }
+  .section .where a { color: #3498db; text-decoration: none; font-weight: 600; }
+  .section .where a:hover { text-decoration: underline; }
+  .section ul { padding-left: 38px; margin-top: 8px; list-style: none; }
+  .section li { font-size: 14px; color: #4a5568; padding: 4px 0 4px 18px;
+    position: relative; }
+  .section li::before { content: "\\2014"; position: absolute; left: 0; color: #95a5a6; }
   .tip {
-    background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px;
-    padding: 12px 16px; margin-top: 24px; font-size: 13px; line-height: 1.7;
+    background: #fef9e7; border-left: 4px solid #f1c40f; border-radius: 6px;
+    padding: 14px 18px; margin: 18px 0; font-size: 14px; color: #7d6608;
   }
-  .tip b { color: #92400e; }
+  .tip b { color: #6c5400; }
+  .lang-block { display: none; }
+  .lang-block.active { display: block; }
+  @media (max-width: 600px) { .topbar { flex-wrap: wrap; } .section .where, .section ul { padding-left: 0; margin-top: 12px; } }
 </style>
 </head>
 <body>
 
 <div class="topbar">
-  <span>🏛️ <b>Andijon SSB</b> — Boshqaruv paneli</span>
+  <strong>Andijon SSB &mdash; Boshqaruv qo'llanmasi</strong>
   <span style="flex:1"></span>
-  <a href="/admin/">← Admin panelga qaytish</a>
+  <span class="lang-switch">
+    <button id="btn-uz" class="active" onclick="setLang('uz')">O'zbek</button>
+    <button id="btn-kr" onclick="setLang('kr')">&#1038;&#1079;&#1073;&#1077;&#1082;</button>
+    <button id="btn-ru" onclick="setLang('ru')">&#1056;&#1091;&#1089;&#1089;&#1082;&#1080;&#1081;</button>
+  </span>
+  <a href="/admin/">&larr; Admin panel</a>
 </div>
 
 <div class="container">
-  <h1>📖 Admin panel qo'llanmasi</h1>
-  <p class="subtitle">Qaysi bo'lim saytning qayeriga ta'sir qilishi haqida to'liq ma'lumot</p>
 
-  <!-- RANG VA KO'RINISH -->
-  <div class="section-divider">🎨 Rang va ko'rinish</div>
-  <div class="grid">
+<!-- ============ O'ZBEK (LOTIN) ============ -->
+<div class="lang-block active" id="lang-uz">
+<h1>Saytni qanday boshqarish kerak</h1>
+<p class="subtitle">Quyida har bir bo'lim saytning qaysi qismini boshqarishi tushuntirilgan. Tartib bo'yicha o'qing.</p>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#fef3c7;">🎨</div>
-        <div>
-          <div class="card-title">Sayt sozlamalari</div>
-          <div class="card-link"><a href="/admin/core/sitesettings/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag yellow">Navbar rangi</span>
-        <span class="tag yellow">Tugmalar rangi</span>
-        <span class="tag yellow">Sarlavhalar</span>
-        <span class="tag yellow">Logotip</span>
-        <span class="tag yellow">Favicon</span>
-      </div>
-      <ul class="steps">
-        <li>«Asosiy rang» — navbar, tugmalar va barcha asosiy elementlar rangi</li>
-        <li>«Ikkinchi rang» — kategoriya teglari va hover effektlar</li>
-        <li>«Aksent rang» — e'lon va muhim belgilar rangi</li>
-        <li>Rang tanlash uchun rangli kvadratni bosing → palitra ochiladi</li>
-        <li>Logotip PNG/SVG formatida yuklang (240×60 px tavsiya)</li>
-      </ul>
-      <div class="color-demo">
-        <div class="color-swatch">
-          <div class="swatch" style="background:#0ea5e9;"></div>
-          <span>Asosiy (ko'k)</span>
-        </div>
-        <div class="color-swatch">
-          <div class="swatch" style="background:#14b8a6;"></div>
-          <span>Ikkinchi (yashil)</span>
-        </div>
-        <div class="color-swatch">
-          <div class="swatch" style="background:#f59e0b;"></div>
-          <span>Aksent (sariq)</span>
-        </div>
-      </div>
-    </div>
+<div class="section">
+  <h2><span class="num">1</span> Tashkilot ma'lumotlari</h2>
+  <p class="where">Qayerda: <a href="/admin/core/generalinfo/">Sayt boshqaruvi &rarr; Umumiy ma'lumot</a></p>
+  <ul>
+    <li>Tashkilot nomini, manzilini, telefon va elektron pochta yozasiz</li>
+    <li>Bu ma'lumotlar saytning yuqori qismida va aloqa sahifasida ko'rinadi</li>
+    <li>Telegram, Facebook, Instagram havolalarini kiriting &mdash; sayt ostidagi ikonkalar shu havolalarga olib boradi</li>
+    <li>Har bir maydonda 3 ta til varianti bor: O'zbek, Krill, Rus &mdash; uchchalasini ham to'ldiring</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#fce7f3;">🖼️</div>
-        <div>
-          <div class="card-title">Sayt rasmlari</div>
-          <div class="card-link"><a href="/admin/core/mediaasset/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag red">Bosh sahifa fon rasmi</span>
-        <span class="tag red">«Biz haqimizda» rasmi</span>
-        <span class="tag red">Aloqa sahifasi rasmi</span>
-      </div>
-      <ul class="steps">
-        <li>«Joylashuv»ni tanlang: qaysi sahifaga mos rasm ekanini belgilaydi</li>
-        <li>Rasm yuklang → saqlang → saytda darhol o'zgaradi</li>
-        <li>Tavsiya: 1920×800 px, 300 KB dan oshmasin</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">2</span> Sayt rangini va logotipni o'zgartirish</h2>
+  <p class="where">Qayerda: <a href="/admin/core/sitesettings/">Sayt boshqaruvi &rarr; Sayt sozlamalari</a></p>
+  <ul>
+    <li>Asosiy rang &mdash; tugmalar, havolalar va bosh sarlavhalar rangi</li>
+    <li>Ikkinchi rang &mdash; ikkinchi darajali elementlar uchun</li>
+    <li>Aksent rang &mdash; alohida ajratiladigan tugmalar uchun</li>
+    <li>Rangni tanlash uchun kvadrat ustiga bosing &mdash; palitra ochiladi</li>
+    <li>Logotip va Favicon (brauzer yorlig'i rasmi) ham shu yerda yuklanadi</li>
+  </ul>
+</div>
 
-  </div>
+<div class="section">
+  <h2><span class="num">3</span> Bosh sahifadagi katta rasmlar (slayder)</h2>
+  <p class="where">Qayerda: <a href="/admin/core/banner/">Sayt boshqaruvi &rarr; Bannerlar</a></p>
+  <ul>
+    <li>Bosh sahifaning eng yuqorisida aylanib turadigan katta rasmlar</li>
+    <li>Yangi qo'shish &rarr; rasm yuklash, sarlavha va matn yozish &rarr; saqlash</li>
+    <li>Tartib raqami kichik bo'lgan banner birinchi ko'rinadi</li>
+    <li>"Faol" belgisi olib tashlangan banner saytda ko'rinmaydi</li>
+  </ul>
+</div>
 
-  <!-- TARKIB -->
-  <div class="section-divider">📝 Sayt tarkibi</div>
-  <div class="grid">
+<div class="section">
+  <h2><span class="num">4</span> Yangiliklar</h2>
+  <p class="where">Qayerda: <a href="/admin/news/news/">Yangiliklar &rarr; Yangiliklar</a></p>
+  <ul>
+    <li>Yangi yangilik qo'shish uchun "Yangilik qo'shish" tugmasini bosing</li>
+    <li>Sarlavha, matn va rasmni 3 tilda kiriting</li>
+    <li>Kategoriya tanlang yoki yangisini yarating</li>
+    <li>"Faol" belgini qo'ying &mdash; yangilik darhol saytda paydo bo'ladi</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#dbeafe;">ℹ️</div>
-        <div>
-          <div class="card-title">Umumiy ma'lumot</div>
-          <div class="card-link"><a href="/admin/core/generalinfo/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag">Header telefon/email</span>
-        <span class="tag">Footer manzil</span>
-        <span class="tag">Biz haqimizda sahifasi</span>
-        <span class="tag">Aloqa sahifasi</span>
-        <span class="tag">Ijtimoiy tarmoqlar</span>
-      </div>
-      <ul class="steps">
-        <li>Tashkilot nomi — barcha sarlavhalarda ko'rinadi</li>
-        <li>Telefon/email — headerda va aloqa sahifasida</li>
-        <li>Ijtimoiy tarmoqlar — footer ikonkalari va havolalari</li>
-        <li>Nizom havolasi — «Biz haqimizda» sahifasidagi yuklab olish tugmasi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">5</span> Rahbariyat</h2>
+  <p class="where">Qayerda: <a href="/admin/leadership/leader/">Rahbariyat &rarr; Rahbarlar</a></p>
+  <ul>
+    <li>Rahbarning rasmi, ism-sharifi, lavozimi, biografiyasi yoziladi</li>
+    <li>Qabul kunlari va boshqa ma'lumotlar ham shu yerda</li>
+    <li>"Faol" belgisi qo'yilgan rahbar saytda ko'rinadi</li>
+    <li>Tartib raqami eng kichik bo'lgan rahbar yuqorida ko'rinadi (boshliq birinchi)</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#dcfce7;">📰</div>
-        <div>
-          <div class="card-title">Yangiliklar va bannerlar</div>
-          <div class="card-link">
-            <a href="/admin/news/news/">Yangiliklar →</a> &nbsp;
-            <a href="/admin/core/banner/">Bannerlar →</a>
-          </div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag green">Bosh sahifa karusel</span>
-        <span class="tag green">Yangiliklar ro'yxati</span>
-        <span class="tag green">Yangilik sahifasi</span>
-      </div>
-      <ul class="steps">
-        <li><b>Bannerlar</b> — bosh sahifadagi slayder (karusel)</li>
-        <li>Tartib raqami kichik → bannerni oldinga suriladi</li>
-        <li><b>Yangiliklar</b> → yangilik qo'shish → rasm + matn → Faol = Ha → Saqlash</li>
-        <li>Yangilik saytda /news sahifasida ko'rinadi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">6</span> Tashkiliy tuzilma (bo'limlar)</h2>
+  <p class="where">Qayerda: <a href="/admin/structure/department/">Tuzilma &rarr; Bo'limlar</a></p>
+  <ul>
+    <li>Boshqarmaning ichki bo'limlari ro'yxati</li>
+    <li>Har bir bo'limning nomi, boshlig'i va xodimlar soni kiritiladi</li>
+    <li>Bo'limni boshqa bo'lim ichiga joylashtirish uchun "Ota bo'lim"ni tanlang</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#f3e8ff;">👔</div>
-        <div>
-          <div class="card-title">Rahbariyat</div>
-          <div class="card-link"><a href="/admin/leadership/leader/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag purple">Rahbariyat sahifasi (/leadership)</span>
-      </div>
-      <ul class="steps">
-        <li>Lavozim qo'shing → rahbar qo'shing → rasm yuklang</li>
-        <li>Tartib raqami — ro'yxatdagi joylashuv</li>
-        <li>«Faol» belgisi = saytda ko'rinadi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">7</span> Hujjatlar</h2>
+  <p class="where">Qayerda: <a href="/admin/documents/document/">Hujjatlar &rarr; Hujjatlar</a></p>
+  <ul>
+    <li>PDF yoki Word formatdagi hujjatlarni yuklash uchun</li>
+    <li>Sarlavha, fayl va kategoriya tanlang &mdash; saqlang</li>
+    <li>Saytning Hujjatlar sahifasida foydalanuvchilar yuklab olishi mumkin</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#fef9c3;">🏢</div>
-        <div>
-          <div class="card-title">Tuzilma (Bo'limlar)</div>
-          <div class="card-link"><a href="/admin/structure/department/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag yellow">Tuzilma sahifasi (/structure)</span>
-      </div>
-      <ul class="steps">
-        <li>Har bir bo'lim/department qo'shiladi</li>
-        <li>«Ota bo'lim» — ierarxik ko'rinish uchun (ixtiyoriy)</li>
-        <li>Bo'lim boshlig'i ismi — struktura kartochkasida ko'rinadi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">8</span> Saytning yuqori menyusi</h2>
+  <p class="where">Qayerda: <a href="/admin/core/navitem/">Sayt boshqaruvi &rarr; Yuqori menyu havolalari</a></p>
+  <ul>
+    <li>Saytning eng yuqorisidagi havolalar (Bosh sahifa, Yangiliklar, Bog'lanish va h.k.)</li>
+    <li>Yangi havola qo'shish uchun "Qo'shish" tugmasini bosing</li>
+    <li>Tartib raqami kichik bo'lgan havola chap tomonda ko'rinadi</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#fce7f3;">📄</div>
-        <div>
-          <div class="card-title">Hujjatlar</div>
-          <div class="card-link"><a href="/admin/documents/document/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag red">Hujjatlar sahifasi (/documents)</span>
-      </div>
-      <ul class="steps">
-        <li>Hujjat kategoriyasini avval yarating</li>
-        <li>Hujjat qo'shing → fayl yuklang (PDF/DOCX) → kategoriya tanlang</li>
-        <li>«Faol» = saytda yuklab olish uchun ko'rinadi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">9</span> Saytning pastki qismi (Footer)</h2>
+  <p class="where">Qayerda: <a href="/admin/core/footerlink/">Sayt boshqaruvi &rarr; Pastki menyu havolalari</a></p>
+  <ul>
+    <li>Saytning eng ostidagi havolalar (Tezkor havolalar va Davlat saytlari)</li>
+    <li>"Tezkor havolalar" &mdash; ichki sahifalar (Yangiliklar, Hujjatlar, Aloqa)</li>
+    <li>"Davlat saytlari" &mdash; tashqi havolalar (gov.uz, ssv.uz)</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#e0f2fe;">✉️</div>
-        <div>
-          <div class="card-title">Murojaatlar (Aloqa formi)</div>
-          <div class="card-link"><a href="/admin/contact/appeal/">Ko'rish →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag">Faqat o'qish — sayt formasidan keladi</span>
-      </div>
-      <ul class="steps">
-        <li>Saytdagi «Aloqa» formasidan yuborilgan murojaatlar</li>
-        <li>Yangi murojaat qo'shib bo'lmaydi — faqat ko'rish mumkin</li>
-        <li>«Ko'rildi» statusini belgilash mumkin</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">10</span> Murojaatlar (foydalanuvchilardan kelgan xabarlar)</h2>
+  <p class="where">Qayerda: <a href="/admin/contact/appeal/">Murojaatlar &rarr; Murojaatlar</a></p>
+  <ul>
+    <li>Foydalanuvchilar saytdagi "Bog'lanish" formasi orqali yuborgan xabarlarni ko'rasiz</li>
+    <li>Yangi murojaatni ko'rgandan so'ng "Ko'rilgan" belgisini qo'ying</li>
+    <li>Bu yerda yangi murojaat qo'shib bo'lmaydi &mdash; faqat ko'rish uchun</li>
+  </ul>
+</div>
 
-  </div>
+<div class="tip">
+  <b>Eslatma:</b> O'zgartirishlar saqlangandan so'ng saytni yangilang (F5) &mdash; o'zgarishlar darhol ko'rinadi.
+  Server qayta ishga tushirilishi shart emas. Agar yangi sahifa qo'shgan bo'lsangiz, biror muammo bo'lsa,
+  IT mutaxassisingizga murojaat qiling.
+</div>
+</div>
 
-  <!-- NAVIGATSIYA -->
-  <div class="section-divider">🧭 Navigatsiya va tuzilma</div>
-  <div class="grid">
+<!-- ============ KRILL ============ -->
+<div class="lang-block" id="lang-kr">
+<h1>Сайтни қандай бошқариш керак</h1>
+<p class="subtitle">Қуйида ҳар бир бўлим сайтнинг қайси қисмини бошқариши тушунтирилган.</p>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#dbeafe;">☰</div>
-        <div>
-          <div class="card-title">Navigatsiya (Navbar)</div>
-          <div class="card-link"><a href="/admin/core/navitem/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag">Sayt yuqori menyu havolalari</span>
-      </div>
-      <ul class="steps">
-        <li>Yangi element qo'shish → nomi + havola → tartib → Faol = Ha</li>
-        <li>Havola: <code>/news</code>, <code>/about</code>, <code>/contact</code> va h.k.</li>
-        <li>Tartib raqami kichik → menyuda oldinda ko'rinadi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">1</span> Ташкилот маълумотлари</h2>
+  <p class="where">Қаерда: <a href="/admin/core/generalinfo/">Сайт бошқаруви &rarr; Умумий маълумот</a></p>
+  <ul>
+    <li>Ташкилот номини, манзилини, телефон ва электрон почта ёзасиз</li>
+    <li>Бу маълумотлар сайтнинг юқори қисмида ва алоқа саҳифасида кўринади</li>
+    <li>Телеграм, Фейсбук, Инстаграм ҳаволаларини киритинг</li>
+    <li>Ҳар бир майдонда 3 та тил варианти бор &mdash; уччаласини ҳам тўлдиринг</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#dcfce7;">🔗</div>
-        <div>
-          <div class="card-title">Footer havolalar</div>
-          <div class="card-link"><a href="/admin/core/footerlink/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag green">Sayt pastki qismi (footer)</span>
-      </div>
-      <ul class="steps">
-        <li>«Tezkor havolalar» — ichki sahifalar (Yangiliklar, Hujjatlar...)</li>
-        <li>«Davlat saytlari» — tashqi havolalar (gov.uz, ssv.uz...)</li>
-        <li>«Tashqi havola» = yangi oynada ochiladi</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">2</span> Сайт рангини ва логотипни ўзгартириш</h2>
+  <p class="where">Қаерда: <a href="/admin/core/sitesettings/">Сайт бошқаруви &rarr; Сайт созламалари</a></p>
+  <ul>
+    <li>Асосий ранг &mdash; тугмалар, ҳаволалар ва бош сарлавҳалар ранги</li>
+    <li>Ранг танлаш учун квадрат устига босинг &mdash; палитра очилади</li>
+    <li>Логотип ва Фавикон ҳам шу ерда юкланади</li>
+  </ul>
+</div>
 
-    <div class="card">
-      <div class="card-header">
-        <div class="icon" style="background:#fef3c7;">📦</div>
-        <div>
-          <div class="card-title">Sahifa bo'limlari</div>
-          <div class="card-link"><a href="/admin/core/pagesection/">Tahrirlash →</a></div>
-        </div>
-      </div>
-      <div class="affects">
-        <div class="affects-title">Saytda nima o'zgaradi</div>
-        <span class="tag yellow">Bosh sahifa qo'shimcha bloklari</span>
-        <span class="tag yellow">«Biz haqimizda» qo'shimcha bo'limlari</span>
-      </div>
-      <ul class="steps">
-        <li>Sahifa: <code>home</code> yoki <code>about</code></li>
-        <li>Kartochkalar turi → quyida kartochkalar qo'shing</li>
-        <li>Matn bloki → faqat sarlavha + matn yetarli</li>
-      </ul>
-    </div>
+<div class="section">
+  <h2><span class="num">3</span> Бош саҳифадаги катта расмлар (слайдер)</h2>
+  <p class="where">Қаерда: <a href="/admin/core/banner/">Сайт бошқаруви &rarr; Баннерлар</a></p>
+  <ul>
+    <li>Бош саҳифанинг энг юқорисида айланиб турадиган катта расмлар</li>
+    <li>Янги қўшиш &rarr; расм юклаш &rarr; сарлавҳа ва матн ёзиш &rarr; сақлаш</li>
+    <li>Тартиб рақами кичик бўлган баннер биринчи кўринади</li>
+  </ul>
+</div>
 
-  </div>
+<div class="section">
+  <h2><span class="num">4</span> Янгиликлар</h2>
+  <p class="where">Қаерда: <a href="/admin/news/news/">Янгиликлар &rarr; Янгиликлар</a></p>
+  <ul>
+    <li>"Янгилик қўшиш" тугмасини босинг</li>
+    <li>Сарлавҳа, матн ва расмни 3 тилда киритинг</li>
+    <li>"Фаол" белгини қўйинг &mdash; янгилик дарҳол сайтда пайдо бўлади</li>
+  </ul>
+</div>
 
-  <div class="tip">
-    💡 <b>Maslahat:</b> Har bir o'zgartirishdan so'ng saytni yangi browser oynasida
-    <a href="/" target="_blank">http://46.224.219.146</a> ga o'tib tekshiring.
-    O'zgarishlar darhol ko'rinadi — server qayta ishga tushirishni talab qilmaydi.
-    <br><br>
-    🌐 <b>Til:</b> Har bir maydonda (O'z), (Kr), (Ru) variantlarini to'ldiring.
-    Foydalanuvchi saytda til almashtirganda tegishli matn ko'rinadi.
-    Agar (Kr) va (Ru) bo'sh qoldirilsa, (O'z) matni ko'rsatiladi.
-  </div>
+<div class="section">
+  <h2><span class="num">5</span> Раҳбарият</h2>
+  <p class="where">Қаерда: <a href="/admin/leadership/leader/">Раҳбарият &rarr; Раҳбарлар</a></p>
+  <ul>
+    <li>Раҳбарнинг расми, исм-шарифи, лавозими, биографияси ёзилади</li>
+    <li>Қабул кунлари ва бошқа маълумотлар ҳам шу ерда</li>
+    <li>Тартиб рақами энг кичик бўлган раҳбар юқорида кўринади</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">6</span> Ташкилий тузилма (бўлимлар)</h2>
+  <p class="where">Қаерда: <a href="/admin/structure/department/">Тузилма &rarr; Бўлимлар</a></p>
+  <ul>
+    <li>Бошқарманинг ички бўлимлари рўйхати</li>
+    <li>Ҳар бир бўлимнинг номи, бошлиғи ва ходимлар сони киритилади</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">7</span> Ҳужжатлар</h2>
+  <p class="where">Қаерда: <a href="/admin/documents/document/">Ҳужжатлар &rarr; Ҳужжатлар</a></p>
+  <ul>
+    <li>PDF ёки Word форматдаги ҳужжатларни юклаш учун</li>
+    <li>Сарлавҳа, файл ва категория танланг &mdash; сақланг</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">8</span> Сайтнинг юқори менюси</h2>
+  <p class="where">Қаерда: <a href="/admin/core/navitem/">Сайт бошқаруви &rarr; Юқори меню ҳаволалари</a></p>
+  <ul>
+    <li>Сайтнинг энг юқорисидаги ҳаволалар (Бош саҳифа, Янгиликлар ва ҳ.к.)</li>
+    <li>Тартиб рақами кичик бўлган ҳавола чап томонда кўринади</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">9</span> Сайтнинг пастки қисми</h2>
+  <p class="where">Қаерда: <a href="/admin/core/footerlink/">Сайт бошқаруви &rarr; Пастки меню ҳаволалари</a></p>
+  <ul>
+    <li>"Тезкор ҳаволалар" &mdash; ички саҳифалар (Янгиликлар, Ҳужжатлар, Алоқа)</li>
+    <li>"Давлат сайтлари" &mdash; ташқи ҳаволалар (gov.uz, ssv.uz)</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">10</span> Мурожаатлар</h2>
+  <p class="where">Қаерда: <a href="/admin/contact/appeal/">Мурожаатлар &rarr; Мурожаатлар</a></p>
+  <ul>
+    <li>Фойдаланувчилар сайт орқали юборган хабарларни кўрасиз</li>
+    <li>Янгисини қўшиб бўлмайди &mdash; фақат кўриш учун</li>
+  </ul>
+</div>
+
+<div class="tip">
+  <b>Эслатма:</b> Ўзгартиришлар сақлангандан сўнг сайтни янгиланг (F5) &mdash; ўзгаришлар дарҳол кўринади.
+</div>
+</div>
+
+<!-- ============ RUSSKIY ============ -->
+<div class="lang-block" id="lang-ru">
+<h1>Как управлять сайтом</h1>
+<p class="subtitle">Ниже объясняется, какой раздел отвечает за какую часть сайта.</p>
+
+<div class="section">
+  <h2><span class="num">1</span> Информация об организации</h2>
+  <p class="where">Где: <a href="/admin/core/generalinfo/">Управление сайтом &rarr; Общая информация</a></p>
+  <ul>
+    <li>Введите название, адрес, телефон и email организации</li>
+    <li>Эти данные отображаются в шапке сайта и на странице контактов</li>
+    <li>Введите ссылки на Telegram, Facebook, Instagram</li>
+    <li>В каждом поле есть 3 языковых варианта &mdash; заполните все три</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">2</span> Изменение цвета сайта и логотипа</h2>
+  <p class="where">Где: <a href="/admin/core/sitesettings/">Управление сайтом &rarr; Настройки сайта</a></p>
+  <ul>
+    <li>Основной цвет &mdash; цвет кнопок, ссылок и заголовков</li>
+    <li>Чтобы выбрать цвет, нажмите на квадрат &mdash; откроется палитра</li>
+    <li>Логотип и Favicon также загружаются здесь</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">3</span> Большие изображения на главной (слайдер)</h2>
+  <p class="where">Где: <a href="/admin/core/banner/">Управление сайтом &rarr; Баннеры</a></p>
+  <ul>
+    <li>Большие изображения, которые крутятся вверху главной страницы</li>
+    <li>Добавить новый &rarr; загрузить изображение &rarr; написать заголовок и текст &rarr; сохранить</li>
+    <li>Баннер с меньшим порядковым номером показывается первым</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">4</span> Новости</h2>
+  <p class="where">Где: <a href="/admin/news/news/">Новости &rarr; Новости</a></p>
+  <ul>
+    <li>Нажмите кнопку "Добавить новость"</li>
+    <li>Введите заголовок, текст и изображение на 3 языках</li>
+    <li>Поставьте отметку "Активно" &mdash; новость сразу появится на сайте</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">5</span> Руководство</h2>
+  <p class="where">Где: <a href="/admin/leadership/leader/">Руководство &rarr; Руководители</a></p>
+  <ul>
+    <li>Фото, ФИО, должность, биография руководителя</li>
+    <li>Дни приёма и другая информация также здесь</li>
+    <li>Руководитель с наименьшим порядковым номером показывается выше (начальник первым)</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">6</span> Структура (отделы)</h2>
+  <p class="where">Где: <a href="/admin/structure/department/">Структура &rarr; Отделы</a></p>
+  <ul>
+    <li>Список внутренних отделов управления</li>
+    <li>Название каждого отдела, начальник и количество сотрудников</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">7</span> Документы</h2>
+  <p class="where">Где: <a href="/admin/documents/document/">Документы &rarr; Документы</a></p>
+  <ul>
+    <li>Для загрузки документов в формате PDF или Word</li>
+    <li>Введите заголовок, выберите файл и категорию &mdash; сохраните</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">8</span> Верхнее меню сайта</h2>
+  <p class="where">Где: <a href="/admin/core/navitem/">Управление сайтом &rarr; Ссылки верхнего меню</a></p>
+  <ul>
+    <li>Ссылки в самом верху сайта (Главная, Новости, Контакты и т.д.)</li>
+    <li>Ссылка с меньшим порядковым номером показывается слева</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">9</span> Нижняя часть сайта (футер)</h2>
+  <p class="where">Где: <a href="/admin/core/footerlink/">Управление сайтом &rarr; Ссылки нижнего меню</a></p>
+  <ul>
+    <li>"Быстрые ссылки" &mdash; внутренние страницы (Новости, Документы, Контакты)</li>
+    <li>"Госпорталы" &mdash; внешние ссылки (gov.uz, ssv.uz)</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">10</span> Обращения</h2>
+  <p class="where">Где: <a href="/admin/contact/appeal/">Обращения &rarr; Обращения</a></p>
+  <ul>
+    <li>Сообщения, отправленные пользователями через форму контактов</li>
+    <li>Новые добавлять нельзя &mdash; только просмотр</li>
+  </ul>
+</div>
+
+<div class="tip">
+  <b>Примечание:</b> После сохранения изменений обновите сайт (F5) &mdash; изменения отобразятся сразу.
+</div>
+</div>
 
 </div>
+
+<script>
+function setLang(lang) {
+  document.querySelectorAll('.lang-block').forEach(b => b.classList.remove('active'));
+  document.getElementById('lang-' + lang).classList.add('active');
+  document.querySelectorAll('.lang-switch button').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + lang).classList.add('active');
+  try { localStorage.setItem('admin-guide-lang', lang); } catch(e) {}
+}
+try {
+  var saved = localStorage.getItem('admin-guide-lang');
+  if (saved && ['uz','kr','ru'].indexOf(saved) >= 0) setLang(saved);
+} catch(e) {}
+</script>
+
 </body>
 </html>
 """
