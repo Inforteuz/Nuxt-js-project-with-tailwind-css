@@ -173,16 +173,45 @@ GUIDE_HTML = """<!DOCTYPE html>
   <h2><span class="num">10</span> Murojaatlar (foydalanuvchilardan kelgan xabarlar)</h2>
   <p class="where">Qayerda: <a href="/admin/contact/appeal/">Murojaatlar &rarr; Murojaatlar</a></p>
   <ul>
-    <li>Foydalanuvchilar saytdagi "Bog'lanish" formasi orqali yuborgan xabarlarni ko'rasiz</li>
-    <li>Yangi murojaatni ko'rgandan so'ng "Ko'rilgan" belgisini qo'ying</li>
-    <li>Bu yerda yangi murojaat qo'shib bo'lmaydi &mdash; faqat ko'rish uchun</li>
+    <li>Foydalanuvchilar saytdagi "Bog'lanish" formasi orqali yuborgan xabarlar shu yerga keladi</li>
+    <li>Har bir murojaatda: F.I.Sh., telefon, hudud, mavzu va matn ko'rsatiladi</li>
+    <li>Murojaatni ochib, holatini o'zgartiring: "Yangi" &rarr; "Ko'rib chiqilmoqda" &rarr; "Hal etildi"</li>
+    <li>Bu yerda yangi murojaat qo'shib bo'lmaydi &mdash; faqat ko'rish va holat o'zgartirish</li>
+    <li>Yuqorida sana va holat bo'yicha filtrlash mumkin</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">11</span> Yangi xodim (admin) qo'shish va ruxsatlar</h2>
+  <p class="where">Qayerda: <a href="/admin/auth/user/">Foydalanuvchilar &rarr; Foydalanuvchilar</a></p>
+  <ul>
+    <li>"Foydalanuvchi qo'shish" tugmasini bosing &mdash; foydalanuvchi nomi va parolni kiriting</li>
+    <li>So'ng "Saqlash va davom ettirish" &mdash; ruxsatlar sahifasi ochiladi</li>
+    <li><b>"Xodimlar maqomi" (Staff status)</b> &mdash; bu belgi qo'yilmasa, foydalanuvchi admin paneliga kira olmaydi. Albatta qo'ying.</li>
+    <li><b>"Super foydalanuvchi" (Superuser)</b> &mdash; faqat asosiy administrator uchun. Hech qachon oddiy xodimga bermang!</li>
+    <li><b>"Guruhlar"</b> &mdash; foydalanuvchini guruhga qo'shing (Yangiliklar muharriri, Murojaatlarni boshqaruvchi va h.k.). Guruhga ruxsat berilgan bo'limlarga kirish hosil bo'ladi.</li>
+    <li>Yangi guruh yaratish: <a href="/admin/auth/group/">Foydalanuvchilar &rarr; Guruhlar &rarr; Qo'shish</a></li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">12</span> Saytni boshqa tashkilot uchun moslashtirish</h2>
+  <p class="where">Qayerda: <a href="/admin/core/generalinfo/">Umumiy ma'lumot</a> + <a href="/admin/core/sitesettings/">Sayt sozlamalari</a></p>
+  <ul>
+    <li><b>Tashkilot nomi</b> &mdash; "Umumiy ma'lumot" bo'limidagi 3 tildagi "nomi" maydonlari. Bu nom saytning yuqori qismida, footerda va brauzer yorlig'ida ko'rinadi</li>
+    <li><b>Logotip</b> va <b>Favicon</b> &mdash; "Sayt sozlamalari"da yuklanadi. Logotipni 240&times;60 px PNG yoki SVG formatda yuklang</li>
+    <li><b>Ranglar</b> &mdash; "Sayt sozlamalari" da Asosiy/Ikkinchi/Aksent rang. Ranglar saqlanganda saytda darhol o'zgaradi (sayfani yangilang)</li>
+    <li><b>Manzil, telefon, email</b> &mdash; "Umumiy ma'lumot"da</li>
+    <li><b>Ijtimoiy tarmoqlar</b> &mdash; "Umumiy ma'lumot"dagi Telegram/Facebook/Instagram havolalari</li>
+    <li><b>Yuqori menyu havolalari</b> &mdash; "Yuqori menyu havolalari"da har bir tashkilot uchun moslab kiritiladi</li>
+    <li><b>Bosh sahifa bannerlari</b> &mdash; har bir tashkilot uchun maxsus rasmlar va matnlar yuklanadi</li>
+    <li>Bir kalit so'z bilan: barcha matn, rang, rasm, havola admin paneldan o'zgartiriladi &mdash; kodga tegmasdan</li>
   </ul>
 </div>
 
 <div class="tip">
   <b>Eslatma:</b> O'zgartirishlar saqlangandan so'ng saytni yangilang (F5) &mdash; o'zgarishlar darhol ko'rinadi.
-  Server qayta ishga tushirilishi shart emas. Agar yangi sahifa qo'shgan bo'lsangiz, biror muammo bo'lsa,
-  IT mutaxassisingizga murojaat qiling.
+  Server qayta ishga tushirilishi shart emas. Biror muammo yuzaga kelsa, IT mutaxassisingizga murojaat qiling.
 </div>
 </div>
 
@@ -282,8 +311,33 @@ GUIDE_HTML = """<!DOCTYPE html>
   <h2><span class="num">10</span> Мурожаатлар</h2>
   <p class="where">Қаерда: <a href="/admin/contact/appeal/">Мурожаатлар &rarr; Мурожаатлар</a></p>
   <ul>
-    <li>Фойдаланувчилар сайт орқали юборган хабарларни кўрасиз</li>
-    <li>Янгисини қўшиб бўлмайди &mdash; фақат кўриш учун</li>
+    <li>Фойдаланувчилар сайт орқали юборган хабарлар шу ерга келади</li>
+    <li>Ҳар бир мурожаатда: Ф.И.Ш., телефон, ҳудуд, мавзу ва матн кўрсатилади</li>
+    <li>Ҳолатини ўзгартиринг: "Янги" &rarr; "Кўриб чиқилмоқда" &rarr; "Ҳал этилди"</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">11</span> Янги ходим (админ) қўшиш ва рухсатлар</h2>
+  <p class="where">Қаерда: <a href="/admin/auth/user/">Фойдаланувчилар &rarr; Фойдаланувчилар</a></p>
+  <ul>
+    <li>"Фойдаланувчи қўшиш" тугмасини босинг, фойдаланувчи номи ва паролни киритинг</li>
+    <li><b>"Ходимлар мақоми"</b> белгисини қўйинг &mdash; усиз админ панелига кириб бўлмайди</li>
+    <li><b>"Супер фойдаланувчи"</b> &mdash; фақат асосий администратор учун, оддий ходимга берманг</li>
+    <li><b>"Гуруҳлар"</b> орқали рухсатлар бериш мумкин (Янгиликлар мухаррири ва ҳ.к.)</li>
+    <li>Янги гуруҳ: <a href="/admin/auth/group/">Фойдаланувчилар &rarr; Гуруҳлар</a></li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">12</span> Сайтни бошқа ташкилот учун мослаштириш</h2>
+  <p class="where">Қаерда: <a href="/admin/core/generalinfo/">Умумий маълумот</a> + <a href="/admin/core/sitesettings/">Сайт созламалари</a></p>
+  <ul>
+    <li><b>Ташкилот номи</b> &mdash; "Умумий маълумот" бўлимидаги 3 тилдаги "номи" майдонлари</li>
+    <li><b>Логотип</b> ва <b>Фавикон</b> &mdash; "Сайт созламалари"да юкланади</li>
+    <li><b>Ранглар</b> &mdash; "Сайт созламалари"да Асосий / Иккинчи / Аксент. Сайтда дарҳол ўзгаради</li>
+    <li><b>Манзил, телефон, email</b> &mdash; "Умумий маълумот"да</li>
+    <li>Барча матн, ранг, расм ва ҳавола админ панелдан ўзгартирилади &mdash; кодга тегмасдан</li>
   </ul>
 </div>
 
@@ -388,8 +442,34 @@ GUIDE_HTML = """<!DOCTYPE html>
   <h2><span class="num">10</span> Обращения</h2>
   <p class="where">Где: <a href="/admin/contact/appeal/">Обращения &rarr; Обращения</a></p>
   <ul>
-    <li>Сообщения, отправленные пользователями через форму контактов</li>
-    <li>Новые добавлять нельзя &mdash; только просмотр</li>
+    <li>Сообщения, отправленные пользователями через форму контактов сайта</li>
+    <li>В каждом обращении: ФИО, телефон, регион, тема и текст</li>
+    <li>Изменяйте статус: "Новое" &rarr; "Рассматривается" &rarr; "Решено"</li>
+    <li>Добавлять новые нельзя &mdash; только просмотр и изменение статуса</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">11</span> Добавление нового сотрудника (админа) и права доступа</h2>
+  <p class="where">Где: <a href="/admin/auth/user/">Пользователи &rarr; Пользователи</a></p>
+  <ul>
+    <li>Нажмите "Добавить пользователя", введите имя пользователя и пароль</li>
+    <li>Поставьте галочку <b>"Статус сотрудника"</b> &mdash; без неё пользователь не сможет войти в админку</li>
+    <li><b>"Суперпользователь"</b> &mdash; только для главного администратора. Не давайте обычным сотрудникам!</li>
+    <li>Через <b>"Группы"</b> можно назначать права (Редактор новостей и т.д.)</li>
+    <li>Создание группы: <a href="/admin/auth/group/">Пользователи &rarr; Группы</a></li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">12</span> Адаптация сайта под другую организацию</h2>
+  <p class="where">Где: <a href="/admin/core/generalinfo/">Общая информация</a> + <a href="/admin/core/sitesettings/">Настройки сайта</a></p>
+  <ul>
+    <li><b>Название организации</b> &mdash; в разделе "Общая информация" (3 языка)</li>
+    <li><b>Логотип</b> и <b>Favicon</b> загружаются в "Настройках сайта"</li>
+    <li><b>Цвета</b> &mdash; Основной / Вторичный / Акцент. Меняются на сайте сразу</li>
+    <li><b>Адрес, телефон, email</b> &mdash; в "Общей информации"</li>
+    <li>Весь текст, цвета, изображения и ссылки меняются через админ-панель &mdash; без вмешательства в код</li>
   </ul>
 </div>
 

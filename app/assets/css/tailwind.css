@@ -1,3 +1,43 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ============================================
+   Dynamic theme color CSS variables (RGB triplets, no alpha).
+   Default palette = blue / teal / amber. Admin panel can override
+   at runtime via JS (see app.vue applyDynamicColors).
+   ============================================ */
+:root {
+  --c-primary-50:  235 245 255;
+  --c-primary-100: 214 235 255;
+  --c-primary-200: 173 214 255;
+  --c-primary-300: 133 194 255;
+  --c-primary-400:  92 173 255;
+  --c-primary-500:  10  77 140;
+  --c-primary-600:   8  61 112;
+  --c-primary-700:   6  46  84;
+  --c-primary-800:   4  30  56;
+  --c-primary-900:   2  15  28;
+
+  --c-secondary-50:  236 253 245;
+  --c-secondary-100: 209 250 229;
+  --c-secondary-200: 167 243 208;
+  --c-secondary-300: 110 231 183;
+  --c-secondary-400:  52 211 153;
+  --c-secondary-500:  16 185 129;
+  --c-secondary-600:   5 150 105;
+  --c-secondary-700:   4 120  87;
+  --c-secondary-800:   6  95  70;
+  --c-secondary-900:   6  78  59;
+
+  --c-accent-50:  255 251 235;
+  --c-accent-100: 254 243 199;
+  --c-accent-200: 253 230 138;
+  --c-accent-300: 252 211  77;
+  --c-accent-400: 251 191  36;
+  --c-accent-500: 245 158  11;
+  --c-accent-600: 217 119   6;
+  --c-accent-700: 180  83   9;
+  --c-accent-800: 146  64  14;
+  --c-accent-900: 120  53  15;
+}

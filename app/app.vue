@@ -237,8 +237,8 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <p class="text-xs text-slate-500">© {{ currentYear }} {{ siteName }}. {{ currentLang === 'ru' ? 'Все права защищены.' : 'Barcha huquqlar himoyalangan.' }}</p>
           <div class="flex items-center gap-1 text-xs text-slate-600">
-            <span>{{ currentLang === 'ru' ? 'Разработчик:' : 'Ishlab chiquvchi:' }}</span>
-            <a href="https://inforte.uz" target="_blank" rel="noopener" class="text-secondary-500 hover:text-secondary-400 font-medium transition-colors">INFORTE</a>
+            <span>{{ currentLang === 'ru' ? 'Разработчик:' : currentLang === 'uz_kr' ? 'Ишлаб чиқувчи:' : 'Ishlab chiquvchi:' }}</span>
+            <a href="https://andijon-digitalcity.uz" target="_blank" rel="noopener" class="text-secondary-500 hover:text-secondary-400 font-medium transition-colors">Andijon Digital City</a>
           </div>
         </div>
       </div>
@@ -395,14 +395,42 @@ onMounted(() => {
   })
 })
 
+function hexToRgb(hex) {
+  if (!hex) return null
+  const m = String(hex).trim().replace('#', '')
+  const v = m.length === 3 ? m.split('').map(c => c + c).join('') : m
+  if (!/^[0-9a-fA-F]{6}$/.test(v)) return null
+  return { r: parseInt(v.slice(0, 2), 16), g: parseInt(v.slice(2, 4), 16), b: parseInt(v.slice(4, 6), 16) }
+}
+function setPalette(name, hex) {
+  const root = document.documentElement
+  const rgb = hexToRgb(hex)
+  if (!rgb) return
+  // Lighter shades: mix base towards white. 50 is lightest, 400 closest to base.
+  const lightMix = { 50: 0.94, 100: 0.86, 200: 0.7, 300: 0.5, 400: 0.25 }
+  for (const [shade, t] of Object.entries(lightMix)) {
+    const r = Math.round(rgb.r + (255 - rgb.r) * t)
+    const g = Math.round(rgb.g + (255 - rgb.g) * t)
+    const b = Math.round(rgb.b + (255 - rgb.b) * t)
+    root.style.setProperty(`--c-${name}-${shade}`, `${r} ${g} ${b}`)
+  }
+  root.style.setProperty(`--c-${name}-500`, `${rgb.r} ${rgb.g} ${rgb.b}`)
+  // Darker shades: scale base towards black.
+  const darkMix = { 600: 0.85, 700: 0.7, 800: 0.55, 900: 0.4 }
+  for (const [shade, k] of Object.entries(darkMix)) {
+    const r = Math.round(rgb.r * k)
+    const g = Math.round(rgb.g * k)
+    const b = Math.round(rgb.b * k)
+    root.style.setProperty(`--c-${name}-${shade}`, `${r} ${g} ${b}`)
+  }
+}
 function applyDynamicColors() {
   if (typeof document === 'undefined') return
   const s = siteSettings.value
   if (!s) return
-  const root = document.documentElement
-  if (s.primary_color) root.style.setProperty('--color-primary', s.primary_color)
-  if (s.secondary_color) root.style.setProperty('--color-secondary', s.secondary_color)
-  if (s.accent_color) root.style.setProperty('--color-accent', s.accent_color)
+  if (s.primary_color)   setPalette('primary',   s.primary_color)
+  if (s.secondary_color) setPalette('secondary', s.secondary_color)
+  if (s.accent_color)    setPalette('accent',    s.accent_color)
 }
 
 watch(() => siteSettings.value, applyDynamicColors, { deep: true })

@@ -87,13 +87,18 @@
               <div class="grid md:grid-cols-2 gap-6">
                 <div class="space-y-2">
                   <label for="phone" class="block text-sm font-medium text-slate-700">Telefon raqamingiz <span class="text-red-500">*</span></label>
-                  <input type="tel" id="phone" v-model="form.phone" required placeholder="+998" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all bg-slate-50 focus:bg-white" />
+                  <input type="tel" id="phone" v-model="form.phone" required placeholder="+998 99 123 45 67" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all bg-slate-50 focus:bg-white" />
                 </div>
-                
+
                 <div class="space-y-2">
-                  <label for="region" class="block text-sm font-medium text-slate-700">Hududingiz (Tuman/Shahar) <span class="text-red-500">*</span></label>
-                  <input type="text" id="region" v-model="form.region" required placeholder="Yashash manzilingizni kiriting" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all bg-slate-50 focus:bg-white" />
+                  <label for="email" class="block text-sm font-medium text-slate-700">Elektron pochta <span class="text-slate-400 text-xs">(ixtiyoriy)</span></label>
+                  <input type="email" id="email" v-model="form.email" placeholder="example@mail.uz" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all bg-slate-50 focus:bg-white" />
                 </div>
+              </div>
+
+              <div class="space-y-2">
+                <label for="region" class="block text-sm font-medium text-slate-700">Hududingiz (Tuman/Shahar)</label>
+                <input type="text" id="region" v-model="form.region" placeholder="Masalan: Andijon shahar" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all bg-slate-50 focus:bg-white" />
               </div>
 
               <div class="space-y-2">
@@ -143,6 +148,7 @@ const form = ref({
   first_name: '',
   last_name: '',
   phone: '',
+  email: '',
   region: '',
   subject: '',
   message: ''
@@ -150,37 +156,35 @@ const form = ref({
 
 async function submitForm() {
   if (isSubmitting.value) return
-  
+
   isSubmitting.value = true
   submitStatus.value = null
   submitMessage.value = ''
-  
+
   try {
-    const response = await $fetch(`${config.public.apiBase}/contact/`, {
-      method: 'POST',
-      body: form.value
-    })
-    
-    submitStatus.value = 'success'
-    submitMessage.value = 'Murojaatingiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog\'lanamiz.'
-    
-    // Formani tozalash
-    form.value = {
-      first_name: '',
-      last_name: '',
-      phone: '',
-      region: '',
-      subject: '',
-      message: ''
+    const payload = {
+      full_name: `${form.value.first_name} ${form.value.last_name}`.trim(),
+      phone: form.value.phone,
+      email: form.value.email || '',
+      region: form.value.region,
+      subject: form.value.subject,
+      message: form.value.message,
     }
-    
-    setTimeout(() => {
-      submitMessage.value = ''
-    }, 5000)
-    
+    await $fetch(`${config.public.apiBase}/contact/`, {
+      method: 'POST',
+      body: payload,
+    })
+
+    submitStatus.value = 'success'
+    submitMessage.value = "Murojaatingiz muvaffaqiyatli yuborildi! Tez orada siz bilan bog'lanamiz."
+
+    form.value = { first_name: '', last_name: '', phone: '', email: '', region: '', subject: '', message: '' }
+    setTimeout(() => { submitMessage.value = '' }, 6000)
+
   } catch (error) {
     submitStatus.value = 'error'
-    submitMessage.value = 'Murojaatni yuborishda xatolik yuz berdi. Iltimos, ma\'lumotlarni tekshirib qaytadan urinib ko\'ring.'
+    const detail = error?.data ? Object.values(error.data).flat().join(' ') : ''
+    submitMessage.value = detail || "Murojaatni yuborishda xatolik yuz berdi. Iltimos, ma'lumotlarni tekshirib qaytadan urinib ko'ring."
   } finally {
     isSubmitting.value = false
   }

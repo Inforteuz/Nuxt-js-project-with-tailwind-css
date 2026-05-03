@@ -11,6 +11,7 @@ class Appeal(models.Model):
     full_name = models.CharField(max_length=255, verbose_name="F.I.Sh.")
     phone = models.CharField(max_length=50, verbose_name="Telefon raqami")
     email = models.EmailField(verbose_name="Elektron pochta", blank=True)
+    region = models.CharField(max_length=255, blank=True, verbose_name="Hudud (tuman/shahar)")
     subject = models.CharField(max_length=255, verbose_name="Murojaat mavzusi")
     message = models.TextField(verbose_name="Murojaat matni")
     
