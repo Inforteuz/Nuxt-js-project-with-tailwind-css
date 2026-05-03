@@ -171,6 +171,132 @@ class SectionCard(models.Model):
         return self.title_uz
 
 
+class CustomPage(models.Model):
+    """Dinamik sahifalar — admin paneldan yangi sahifa yaratish uchun."""
+    slug = models.SlugField(
+        max_length=100, unique=True,
+        verbose_name="URL manzil (slug)",
+        help_text="Faqat lotin harflari, raqamlar va '-' belgisi. Masalan: xizmatlar, bolalar-salomatligi"
+    )
+    title_uz = models.CharField(max_length=255, verbose_name="Sarlavha (O'z)")
+    title_kr = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Kr)")
+    title_ru = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Ru)")
+    meta_description_uz = models.CharField(
+        max_length=300, blank=True,
+        verbose_name="Meta tavsif (O'z)",
+        help_text="Qidiruv tizimlarida ko'rinadigan qisqa tavsif (150–160 belgi)"
+    )
+    show_in_nav = models.BooleanField(
+        default=False, verbose_name="Asosiy menyuga qo'shish",
+        help_text="Belgilansa, bu sahifa yuqori navigatsiya menyusida avtomatik paydo bo'ladi"
+    )
+    nav_order = models.PositiveIntegerField(
+        default=99, verbose_name="Menyu tartib raqami",
+        help_text="Menyudagi o'rni (kichik son = oldinda)"
+    )
+    is_active = models.BooleanField(default=True, verbose_name="Faol (saytda ko'rinadi)")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "Maxsus sahifa"
+        verbose_name_plural = "Maxsus sahifalar"
+        ordering = ['slug']
+
+    def __str__(self):
+        return f"{self.title_uz}  (/{self.slug})"
+
+
+class CustomPageBlock(models.Model):
+    """Sahifa ichidagi kontent bloklari."""
+    BLOCK_TYPES = (
+        ('text',       'Matn bloki'),
+        ('image_text', 'Rasm + Matn'),
+        ('cards',      'Kartochkalar'),
+        ('cta',        'Chaqiruv tugmasi (CTA)'),
+        ('divider',    'Bo\'luvchi chiziq'),
+    )
+    IMAGE_POSITION = (
+        ('right', "O'ngda"),
+        ('left',  "Chapda"),
+    )
+    page = models.ForeignKey(
+        CustomPage, on_delete=models.CASCADE,
+        related_name='blocks', verbose_name="Sahifa"
+    )
+    block_type = models.CharField(
+        max_length=20, choices=BLOCK_TYPES, default='text',
+        verbose_name="Blok turi"
+    )
+    title_uz = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (O'z)")
+    title_kr = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Kr)")
+    title_ru = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Ru)")
+    content_uz = models.TextField(
+        blank=True, verbose_name="Matn (O'z)",
+        help_text="HTML teglarini ishlatish mumkin: &lt;b&gt;, &lt;i&gt;, &lt;br&gt;, &lt;ul&gt;&lt;li&gt;..."
+    )
+    content_kr = models.TextField(blank=True, verbose_name="Matn (Kr)")
+    content_ru = models.TextField(blank=True, verbose_name="Matn (Ru)")
+    image = models.ImageField(
+        upload_to='pages/', blank=True, null=True,
+        verbose_name="Rasm",
+        help_text="'Rasm + Matn' bloki uchun. Tavsiya: 800×500 px"
+    )
+    image_position = models.CharField(
+        max_length=10, choices=IMAGE_POSITION, default='right',
+        verbose_name="Rasm joylashuvi",
+        help_text="'Rasm + Matn' blokida rasm matnning qaysi tomonida turadi"
+    )
+    link_text_uz = models.CharField(max_length=100, blank=True, verbose_name="Tugma matni (O'z)")
+    link_text_kr = models.CharField(max_length=100, blank=True, verbose_name="Tugma matni (Kr)")
+    link_text_ru = models.CharField(max_length=100, blank=True, verbose_name="Tugma matni (Ru)")
+    link_url = models.CharField(
+        max_length=255, blank=True, verbose_name="Tugma havolasi",
+        help_text="Masalan: /contact  yoki  https://gov.uz"
+    )
+    order = models.PositiveIntegerField(default=0, verbose_name="Tartib raqami")
+    is_active = models.BooleanField(default=True, verbose_name="Faol")
+
+    class Meta:
+        verbose_name = "Sahifa bloki"
+        verbose_name_plural = "Sahifa bloklari"
+        ordering = ['page', 'order']
+
+    def __str__(self):
+        return f"{self.page.title_uz} — {self.get_block_type_display()} (#{self.order})"
+
+
+class CustomPageCard(models.Model):
+    """Kartochkalar bloki ichidagi alohida kartochkalar."""
+    block = models.ForeignKey(
+        CustomPageBlock, on_delete=models.CASCADE,
+        related_name='cards', verbose_name="Blok"
+    )
+    title_uz = models.CharField(max_length=255, verbose_name="Sarlavha (O'z)")
+    title_kr = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Kr)")
+    title_ru = models.CharField(max_length=255, blank=True, verbose_name="Sarlavha (Ru)")
+    text_uz = models.TextField(blank=True, verbose_name="Matn (O'z)")
+    text_kr = models.TextField(blank=True, verbose_name="Matn (Kr)")
+    text_ru = models.TextField(blank=True, verbose_name="Matn (Ru)")
+    icon = models.CharField(
+        max_length=50, blank=True, verbose_name="Ikonka",
+        help_text="Emoji (masalan: 🏥) yoki fon-awesome klass (fa-heart)"
+    )
+    image = models.ImageField(
+        upload_to='pages/cards/', blank=True, null=True, verbose_name="Rasm"
+    )
+    link = models.CharField(max_length=255, blank=True, verbose_name="Havola")
+    order = models.PositiveIntegerField(default=0, verbose_name="Tartib raqami")
+
+    class Meta:
+        verbose_name = "Kartochka"
+        verbose_name_plural = "Kartochkalar"
+        ordering = ['order']
+
+    def __str__(self):
+        return self.title_uz
+
+
 class MediaAsset(models.Model):
     LOCATION_CHOICES = (
         ('hero', "Bosh sahifa fon rasmi"),

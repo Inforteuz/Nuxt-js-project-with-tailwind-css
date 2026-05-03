@@ -1,10 +1,15 @@
 export const useLanguage = () => {
   const currentLang = useState('language', () => 'uz_lot')
 
-  if (process.client) {
+  // Sync from localStorage ONLY after mount to prevent SSR/CSR hydration mismatch.
+  // On the server, currentLang stays 'uz_lot' (default).
+  // On the client, onMounted updates it to the user's saved preference.
+  onMounted(() => {
     const saved = localStorage.getItem('selected_lang')
-    if (saved) currentLang.value = saved
-  }
+    if (saved && saved !== currentLang.value) {
+      currentLang.value = saved
+    }
+  })
 
   const setLanguage = (lang) => {
     currentLang.value = lang

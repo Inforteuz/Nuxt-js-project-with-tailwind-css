@@ -12,17 +12,24 @@ _allowed_hosts = os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = [h for h in _allowed_hosts.split(',') if h] or ['localhost', '127.0.0.1']
 
 # ============================================================
+# SITE_NAME — o'rnatish skriptida yoki .env da belgilanadi
+# ============================================================
+SITE_NAME    = os.getenv('SITE_NAME',    'Tashkilot sayt boshqaruvi')
+SITE_DOMAIN  = os.getenv('SITE_DOMAIN',  'localhost')
+SITE_ABBR    = os.getenv('SITE_ABBR',    'Admin')   # qisqa nom (navbar uchun)
+
+# ============================================================
 # Jazzmin — Chiroyli admin panel sozlamalari
 # ============================================================
 JAZZMIN_SETTINGS = {
-    "site_title": "Andijon SSB Admin",
-    "site_header": "Andijon SSB",
+    "site_title": f"{SITE_ABBR} Admin",
+    "site_header": SITE_ABBR,
     "site_brand": "Boshqaruv paneli",
     "site_logo": None,
     "login_logo": None,
     "site_icon": None,
-    "welcome_sign": "Xush kelibsiz! Andijon viloyati SSB boshqaruv paneliga",
-    "copyright": "Andijon viloyati sog'liqni saqlash boshqarmasi",
+    "welcome_sign": f"Xush kelibsiz! {SITE_NAME} boshqaruv paneliga",
+    "copyright": SITE_NAME,
     "search_model": [],
     "user_avatar": None,
 
@@ -157,6 +164,7 @@ INSTALLED_APPS = [
     'apps.documents',
     'apps.news',
     'apps.contact',
+    'apps.chat',
 ]
 
 MIDDLEWARE = [

@@ -29,6 +29,7 @@ urlpatterns = [
     path('api/v1/', include('apps.structure.urls')),
     path('api/v1/', include('apps.documents.urls')),
     path('api/v1/', include('apps.contact.urls')),
+    path('api/v1/', include('apps.chat.urls')),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

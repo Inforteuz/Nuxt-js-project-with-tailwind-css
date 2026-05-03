@@ -1,14 +1,17 @@
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.exceptions import NotFound
 from .models import (
     GeneralInfo, SiteSettings, Banner, NavItem,
-    FooterLink, PageSection, MediaAsset
+    FooterLink, PageSection, MediaAsset,
+    CustomPage,
 )
 from .serializers import (
     GeneralInfoSerializer, SiteSettingsSerializer, BannerSerializer,
     NavItemSerializer, FooterLinkSerializer, PageSectionSerializer,
-    MediaAssetSerializer
+    MediaAssetSerializer,
+    CustomPageSerializer, CustomPageListSerializer,
 )
 
 
@@ -70,3 +73,24 @@ class MediaAssetViewSet(viewsets.ReadOnlyModelViewSet):
         if location:
             qs = qs.filter(location=location)
         return qs
+
+
+class CustomPageListView(generics.ListAPIView):
+    """GET /api/v1/pages/ — all active pages (for nav or sitemap)."""
+    serializer_class = CustomPageListSerializer
+
+    def get_queryset(self):
+        return CustomPage.objects.filter(is_active=True)
+
+
+class CustomPageDetailView(generics.RetrieveAPIView):
+    """GET /api/v1/pages/<slug>/ — full page with all blocks."""
+    serializer_class = CustomPageSerializer
+    lookup_field = 'slug'
+
+    def get_object(self):
+        slug = self.kwargs['slug']
+        try:
+            return CustomPage.objects.get(slug=slug, is_active=True)
+        except CustomPage.DoesNotExist:
+            raise NotFound(detail=f"'{slug}' sahifasi topilmadi yoki faol emas.")

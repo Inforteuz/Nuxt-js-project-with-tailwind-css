@@ -244,11 +244,17 @@
       </div>
     </footer>
 
+    <!-- Back to top (shifted left to not overlap AI chat) -->
     <button v-show="showBackToTop" @click="scrollToTop"
-      class="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full bg-primary-500 text-white shadow-lg hover:bg-primary-600 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center"
+      class="fixed bottom-6 right-24 z-40 w-12 h-12 rounded-full bg-primary-500 text-white shadow-lg hover:bg-primary-600 transition-all duration-300 hover:-translate-y-1 flex items-center justify-center"
       aria-label="Yuqoriga qaytish">
       <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/></svg>
     </button>
+
+    <!-- AI Chat Widget -->
+    <ClientOnly>
+      <UiAiChat />
+    </ClientOnly>
   </div>
 </template>
 

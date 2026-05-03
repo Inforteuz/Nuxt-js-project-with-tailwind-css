@@ -2,7 +2,7 @@ from django.db import models
 
 class Position(models.Model):
     name_uz = models.CharField(max_length=200, verbose_name="Lavozim nomi (O'z)")
-    name_kr = models.CharField(max_length=200, verbose_name="Lavozim nomi (Kr)")
+    name_kr = models.CharField(max_length=200, blank=True, verbose_name="Lavozim nomi (Kr)")
     name_ru = models.CharField(max_length=200, verbose_name="Lavozim nomi (Ru)", blank=True)
     order = models.PositiveIntegerField(default=0, verbose_name="Tartib raqami")
 
@@ -17,7 +17,7 @@ class Position(models.Model):
 class Leader(models.Model):
     position = models.ForeignKey(Position, on_delete=models.SET_NULL, null=True, verbose_name="Lavozimi")
     full_name_uz = models.CharField(max_length=200, verbose_name="F.I.Sh. (O'z)")
-    full_name_kr = models.CharField(max_length=200, verbose_name="F.I.Sh. (Kr)")
+    full_name_kr = models.CharField(max_length=200, blank=True, verbose_name="F.I.Sh. (Kr)")
     full_name_ru = models.CharField(max_length=200, verbose_name="F.I.Sh. (Ru)", blank=True)
     
     image = models.ImageField(upload_to='leaders/', verbose_name="Rasm", blank=True, null=True)

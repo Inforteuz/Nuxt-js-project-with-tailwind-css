@@ -1,14 +1,17 @@
 from django import forms
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.auth.models import User, Group
 from django.utils.html import format_html, mark_safe
+from django.urls import reverse
 from .models import (
     GeneralInfo, SiteSettings, Banner, NavItem,
-    FooterLink, PageSection, SectionCard, MediaAsset
+    FooterLink, PageSection, SectionCard, MediaAsset,
+    CustomPage, CustomPageBlock, CustomPageCard,
 )
 
-admin.site.site_header = "Andijon SSB — Boshqaruv paneli"
-admin.site.site_title = "Andijon SSB Admin"
+admin.site.site_header = f"{settings.SITE_NAME} — Boshqaruv paneli"
+admin.site.site_title = f"{settings.SITE_ABBR} Admin"
 admin.site.index_title = "Saytni boshqarish"
 
 admin.site.unregister(User)
@@ -281,3 +284,149 @@ class MediaAssetAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" style="height:50px;border-radius:6px;"/>', obj.image.url)
         return "—"
     image_preview.short_description = "Ko'rinish"
+
+
+# ─────────────────────────────────────────────
+#  CUSTOM PAGES
+# ─────────────────────────────────────────────
+
+class CustomPageBlockInline(admin.TabularInline):
+    model = CustomPageBlock
+    extra = 1
+    fields = ('block_type', 'title_uz', 'image', 'order', 'is_active', 'edit_link')
+    readonly_fields = ('edit_link',)
+    show_change_link = False
+    verbose_name = "Blok"
+    verbose_name_plural = mark_safe(
+        "Kontent bloklari &nbsp;"
+        "<small style='font-weight:normal;color:#888;'>"
+        "— blokni to'liq tahrirlash uchun uning nomini bosing.</small>"
+    )
+
+    def edit_link(self, obj):
+        if obj.pk:
+            url = reverse('admin:core_custompageblock_change', args=[obj.pk])
+            return format_html(
+                '<a href="{}" target="_blank" style="white-space:nowrap;">'
+                'To\'liq tahrirlash &rarr;</a>', url
+            )
+        return mark_safe('<span style="color:#aaa;">Avval saqlang</span>')
+    edit_link.short_description = "Tahrirlash"
+
+
+@admin.register(CustomPage)
+class CustomPageAdmin(admin.ModelAdmin):
+    list_display = ('title_uz', 'slug_link', 'show_in_nav', 'nav_order', 'blocks_count', 'is_active', 'updated_at')
+    list_editable = ('show_in_nav', 'nav_order', 'is_active')
+    list_display_links = ('title_uz',)
+    search_fields = ('title_uz', 'title_ru', 'slug')
+    prepopulated_fields = {'slug': ('title_uz',)}
+    inlines = [CustomPageBlockInline]
+
+    fieldsets = (
+        ("Sahifa nomi va manzili", {
+            'description': mark_safe(
+                '<div style="background:#e8f4ff;padding:10px 14px;border-radius:6px;'
+                'margin-bottom:10px;font-size:13px;line-height:1.6;">'
+                '<b>Yangi sahifa yaratish:</b><br>'
+                '1. Sarlavhani yozing — slug avtomatik to\'ldiriladi.<br>'
+                '2. «Saqlash va davom etish» tugmasini bosing.<br>'
+                '3. Pastdagi «Blok qo\'shish» orqali kontent qo\'shing.<br>'
+                '4. Menyuga qo\'shish uchun «Asosiy menyuga qo\'shish» belgisini qo\'ying.'
+                '</div>'
+            ),
+            'fields': ('title_uz', 'title_kr', 'title_ru', 'slug'),
+        }),
+        ("SEO va navigatsiya", {
+            'fields': ('meta_description_uz', 'show_in_nav', 'nav_order', 'is_active'),
+        }),
+    )
+
+    def slug_link(self, obj):
+        return format_html(
+            '<code style="background:#f0f4ff;padding:2px 6px;border-radius:4px;">/{}</code>',
+            obj.slug
+        )
+    slug_link.short_description = "URL"
+
+    def blocks_count(self, obj):
+        n = obj.blocks.filter(is_active=True).count()
+        total = obj.blocks.count()
+        return format_html(
+            '<span style="color:{};font-weight:bold;">{}</span>'
+            '<span style="color:#aaa;"> / {}</span>',
+            '#059669' if n > 0 else '#dc2626', n, total
+        )
+    blocks_count.short_description = "Faol bloklar"
+
+    def changelist_view(self, request, extra_context=None):
+        extra_context = extra_context or {}
+        extra_context['subtitle'] = mark_safe(
+            'Bu yerda yangi sahifalar yarating — har bir sahifa o\'z URL manziliga ega bo\'ladi '
+            '(masalan: <code>/xizmatlar</code>, <code>/bolalar-salomatligi</code>). '
+            'Sahifani yaratgach, unga kontent bloklari qo\'shing.'
+        )
+        return super().changelist_view(request, extra_context=extra_context)
+
+
+class CustomPageCardInline(admin.StackedInline):
+    model = CustomPageCard
+    extra = 1
+    fields = ('title_uz', 'title_kr', 'title_ru',
+              'text_uz', 'text_kr', 'text_ru',
+              'icon', 'image', 'link', 'order')
+    verbose_name = "Kartochka"
+    verbose_name_plural = "Kartochkalar"
+
+
+@admin.register(CustomPageBlock)
+class CustomPageBlockAdmin(admin.ModelAdmin):
+    list_display = ('__str__', 'page_link', 'block_type', 'order', 'is_active')
+    list_filter = ('page', 'block_type')
+    list_editable = ('order', 'is_active')
+    list_display_links = ('__str__',)
+    inlines = [CustomPageCardInline]
+
+    fieldsets = (
+        ("Asosiy", {
+            'description': mark_safe(
+                '<div style="background:#fff8e1;padding:10px 14px;border-radius:6px;'
+                'margin-bottom:10px;font-size:13px;line-height:1.6;">'
+                '<b>Blok turlari:</b><br>'
+                '<b>Matn bloki</b> — sarlavha + matn (HTML qo\'llab-quvvatlanadi).<br>'
+                '<b>Rasm + Matn</b> — bir tomonda rasm, ikkinchi tomonda matn.<br>'
+                '<b>Kartochkalar</b> — pastdagi «Kartochkalar» bo\'limida kartochkalar qo\'shing.<br>'
+                '<b>Chaqiruv (CTA)</b> — diqqatni tortuvchi sarlavha + tugma havolasi.<br>'
+                '<b>Bo\'luvchi chiziq</b> — bloklarni vizual ajratish uchun.'
+                '</div>'
+            ),
+            'fields': ('page', 'block_type', 'order', 'is_active'),
+        }),
+        ("Sarlavha", {
+            'fields': ('title_uz', 'title_kr', 'title_ru'),
+        }),
+        ("Matn", {
+            'description': mark_safe(
+                '<p class="help">HTML teglarini ishlatish mumkin. Misol: '
+                '<code>&lt;b&gt;qalin&lt;/b&gt;</code>, '
+                '<code>&lt;br&gt;</code> — yangi qator, '
+                '<code>&lt;ul&gt;&lt;li&gt;...&lt;/li&gt;&lt;/ul&gt;</code> — ro\'yxat.</p>'
+            ),
+            'fields': ('content_uz', 'content_kr', 'content_ru'),
+        }),
+        ("Rasm (Rasm + Matn bloki uchun)", {
+            'classes': ('collapse',),
+            'fields': ('image', 'image_position'),
+        }),
+        ("Tugma / Havola (CTA uchun)", {
+            'classes': ('collapse',),
+            'fields': ('link_text_uz', 'link_text_kr', 'link_text_ru', 'link_url'),
+        }),
+    )
+
+    def page_link(self, obj):
+        url = reverse('admin:core_custompage_change', args=[obj.page_id])
+        return format_html(
+            '<a href="{}">{}</a>', url, obj.page.title_uz
+        )
+    page_link.short_description = "Sahifa"
