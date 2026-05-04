@@ -1,6 +1,6 @@
 <template>
-  <!-- Only render if AI config says it's active -->
-  <div v-if="chatActive" class="ai-chat-widget">
+  <!-- Always show the widget; chat sends friendly message if not configured -->
+  <div class="ai-chat-widget">
 
     <!-- Floating toggle button -->
     <button
@@ -59,6 +59,13 @@
             </div>
           </div>
 
+          <!-- Not configured notice -->
+          <div v-if="!chatActive && !loading" class="msg-row msg-assistant">
+            <div class="msg-bubble" style="background:#fff8e1;border:1px solid #fde68a;border-bottom-left-radius:4px;max-width:90%;font-size:13px;color:#92400e;">
+              <p>⚙️ {{ notConfiguredText }}</p>
+            </div>
+          </div>
+
           <!-- History messages -->
           <div
             v-for="(msg, i) in messages"
@@ -99,7 +106,7 @@
           ></textarea>
           <button
             @click="sendMessage"
-            :disabled="loading || !userInput.trim()"
+            :disabled="loading || !userInput.trim() || !chatActive"
             class="chat-send-btn"
             :title="sendLabel"
           >
@@ -186,10 +193,20 @@ const sendLabel = computed(() => {
   return 'Yuborish'
 })
 const welcomeMsg = computed(() => {
-  if (!chatConfig.value) return ''
+  if (!chatConfig.value) {
+    if (currentLang.value === 'ru')    return 'Здравствуйте! Я AI помощник. Чем могу помочь?'
+    if (currentLang.value === 'uz_kr') return 'Салом! Мен AI ёрдамчисиман. Қандай ёрдам бера оламан?'
+    return "Salom! Men AI yordamchiman. Qanday yordam bera olaman?"
+  }
   if (currentLang.value === 'ru')    return chatConfig.value.welcome_ru || chatConfig.value.welcome_uz
   if (currentLang.value === 'uz_kr') return chatConfig.value.welcome_kr || chatConfig.value.welcome_uz
   return chatConfig.value.welcome_uz
+})
+
+const notConfiguredText = computed(() => {
+  if (currentLang.value === 'ru')    return 'AI сервис ещё не настроен. Пожалуйста, добавьте API ключ в панели администратора.'
+  if (currentLang.value === 'uz_kr') return 'AI хизмат ҳали созланмаган. Илтимос, Admin panelda API калит қўшинг.'
+  return "AI xizmat hali sozlanmagan. Admin panelda API kalit qo'shing."
 })
 
 // ── Actions ───────────────────────────────────────
