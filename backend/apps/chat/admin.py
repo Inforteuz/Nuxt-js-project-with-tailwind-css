@@ -11,7 +11,7 @@ class AIConfigAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Provayder va API kalit", {
             'description': mark_safe(
-                '<div style="background:#e8f5e9;padding:12px 16px;border-radius:8px;'
+                '<div style="background:#e8f5e9;color:#444;padding:12px 16px;border-radius:8px;'
                 'margin-bottom:12px;font-size:13px;line-height:1.7;">'
                 '<b>Sozlash tartibi:</b><br>'
                 '1. Provayderni tanlang (masalan: OpenAI yoki Groq)<br>'

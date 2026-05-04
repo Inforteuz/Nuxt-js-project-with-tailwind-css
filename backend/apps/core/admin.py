@@ -76,7 +76,7 @@ class SiteSettingsAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Sayt ranglari", {
             'description': mark_safe(
-                '<div class="help" style="background:#fff3cd;padding:10px 14px;border-radius:6px;margin-bottom:8px;font-size:13px;">'
+                '<div class="help" style="background:#fff3cd;color:#444;padding:10px 14px;border-radius:6px;margin-bottom:8px;font-size:13px;">'
                 '<b>Rangni qanday o\'zgartirish:</b> quyidagi rangli kvadratni bosing → palitra ochiladi → rang tanlang → Saqlash.<br>'
                 'Asosiy rang — navbar va tugmalar rangi. &nbsp; Ikkinchi rang — kategoriya va hover effektlar. &nbsp; Aksent rang — muhim belgilar.'
                 '</div>'
@@ -326,7 +326,7 @@ class CustomPageAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Sahifa nomi va manzili", {
             'description': mark_safe(
-                '<div style="background:#e8f4ff;padding:10px 14px;border-radius:6px;'
+                '<div style="background:#e8f4ff;color:#444;padding:10px 14px;border-radius:6px;'
                 'margin-bottom:10px;font-size:13px;line-height:1.6;">'
                 '<b>Yangi sahifa yaratish:</b><br>'
                 '1. Sarlavhani yozing — slug avtomatik to\'ldiriladi.<br>'
@@ -390,7 +390,7 @@ class CustomPageBlockAdmin(admin.ModelAdmin):
     fieldsets = (
         ("Asosiy", {
             'description': mark_safe(
-                '<div style="background:#fff8e1;padding:10px 14px;border-radius:6px;'
+                '<div style="background:#fff8e1;color:#444;padding:10px 14px;border-radius:6px;'
                 'margin-bottom:10px;font-size:13px;line-height:1.6;">'
                 '<b>Blok turlari:</b><br>'
                 '<b>Matn bloki</b> — sarlavha + matn (HTML qo\'llab-quvvatlanadi).<br>'

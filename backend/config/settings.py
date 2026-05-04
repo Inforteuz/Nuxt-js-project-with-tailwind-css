@@ -93,7 +93,7 @@ JAZZMIN_SETTINGS = {
     "default_icon_children": "fas fa-circle",
 
     # Ranglar
-    "related_modal_active": True,
+    "related_modal_active": False,
     "custom_css": None,
     "custom_js": None,
     "use_google_fonts_cdn": False,
