@@ -1,0 +1,9 @@
+node_modules/
+.output/
+.nuxt/
+backend/
+*.md
+.git/
+.claude/
+deploy_script.py
+install.py
