@@ -25,11 +25,11 @@ services:
       DATABASE_URL: postgres://postgres:admin123@db:5432/org_db
       SECRET_KEY: "ch@ng3-m3-in-production-super-secret-key-2024"
       DEBUG: "False"
-      ALLOWED_HOSTS: "10.10.10.7,localhost,127.0.0.1,backend"
-      CORS_ALLOWED_ORIGINS: "http://10.10.10.7"
+      ALLOWED_HOSTS: "10.10.10.7,10.10.10.15,localhost,127.0.0.1,backend"
+      CORS_ALLOWED_ORIGINS: "http://10.10.10.7,http://10.10.10.15:8080"
       SITE_NAME: "Andijon viloyati SSV"
       SITE_ABBR: "AVSSV"
-      SITE_DOMAIN: "10.10.10.7"
+      SITE_DOMAIN: "10.10.10.15:8080"
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/media
@@ -43,7 +43,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     environment:
-      NUXT_PUBLIC_API_BASE: "http://10.10.10.7/api/v1"
+      NUXT_PUBLIC_API_BASE: "http://10.10.10.15:8080/api/v1"
     depends_on:
       - backend
 
