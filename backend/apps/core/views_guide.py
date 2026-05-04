@@ -209,6 +209,52 @@ GUIDE_HTML = """<!DOCTYPE html>
   </ul>
 </div>
 
+<div class="section">
+  <h2><span class="num">13</span> Maxsus sahifalar yaratish</h2>
+  <p class="where">Qayerda: <a href="/admin/core/custompage/">Sayt boshqaruvi &rarr; Maxsus sahifalar</a></p>
+  <ul>
+    <li><b>Yangi sahifa qo'shish:</b> "Maxsus sahifa qo'shish" tugmasini bosing, sarlavha kiriting &mdash; URL (slug) avtomatik to'ldiriladi</li>
+    <li><b>Slug (URL manzil)</b> &mdash; faqat kichik lotin harflari va "-" belgisi. Masalan: <code>xizmatlar</code> &rarr; saytda <code>/xizmatlar</code> manzilida ochiladi</li>
+    <li><b>Asosiy menyuga qo'shish</b> &mdash; belgilansa, sahifa avtomatik navigatsiya menyusida paydo bo'ladi</li>
+    <li><b>Kontent bloklari</b> &mdash; sahifani saqlangandan so'ng pastdagi "Blok qo'shish" orqali quyidagi bloklarni qo'shing:</li>
+    <li style="padding-left:36px"><b>Matn bloki</b> &mdash; sarlavha va matn (HTML teglari qo'llab-quvvatlanadi)</li>
+    <li style="padding-left:36px"><b>Rasm + Matn</b> &mdash; bir tomonda rasm, ikkinchi tomonda matn. Rasmning o'ng yoki chap joylashuvini tanlash mumkin</li>
+    <li style="padding-left:36px"><b>Kartochkalar</b> &mdash; xizmatlar, yo'nalishlar uchun kartochkalar to'plami</li>
+    <li style="padding-left:36px"><b>Chaqiruv (CTA)</b> &mdash; diqqatni tortuvchi sarlavha va tugma havolasi</li>
+    <li style="padding-left:36px"><b>Bo'luvchi chiziq</b> &mdash; bloklarni vizual ajratish uchun</li>
+    <li><b>Kartochkalar bloki uchun:</b> blokni saqlang &rarr; "To'liq tahrirlash" havolasini bosing &rarr; "Kartochkalar" bo'limida kartochkalar qo'shing</li>
+    <li><b>Tartib raqami</b> &mdash; kichik son = sahifada yuqorida turadi</li>
+  </ul>
+  <div class="tip" style="margin-top:12px">
+    <b>Misol:</b> "Xizmatlar" sahifasi yarating &rarr; slug: <code>xizmatlar</code> &rarr; "Kartochkalar" bloki qo'shing &rarr; har bir xizmatni kartochka sifatida yozing. Saytda <code>/xizmatlar</code> manzilida chiroyli ko'rinadi.
+  </div>
+</div>
+
+<div class="section">
+  <h2><span class="num">14</span> AI Yordamchi &mdash; sozlash va bilimlar bazasi</h2>
+  <p class="where">Qayerda: <a href="/admin/chat/aiconfig/">AI Yordamchi &rarr; AI Yordamchi sozlamalari</a> va <a href="/admin/chat/knowledgeitem/">Bilimlar bazasi</a></p>
+  <ul>
+    <li>Saytning o'ng pastki burchagida suzuvchi chat tugmasi &mdash; foydalanuvchilar savol berib, tezkor javob oladi</li>
+    <li><b>1-qadam &mdash; AI sozlamalari:</b></li>
+    <li style="padding-left:36px"><b>Provayder</b> &mdash; quyidagi AI xizmatlaridan birini tanlang:</li>
+    <li style="padding-left:54px"><b>Groq</b> (tavsiya, bepul) &mdash; <code>console.groq.com/keys</code> &rarr; model: <code>llama3-8b-8192</code></li>
+    <li style="padding-left:54px"><b>OpenRouter</b> &mdash; <code>openrouter.ai/keys</code> &rarr; model: <code>mistralai/mistral-7b-instruct</code></li>
+    <li style="padding-left:54px"><b>OpenAI</b> &mdash; <code>platform.openai.com/api-keys</code> &rarr; model: <code>gpt-4o-mini</code></li>
+    <li style="padding-left:54px"><b>Google Gemini</b> &mdash; <code>aistudio.google.com/app/apikey</code> &rarr; model: <code>gemini-1.5-flash</code></li>
+    <li style="padding-left:36px"><b>API kalit</b> &mdash; tanlangan provayder saytidan olingan maxfiy kalit</li>
+    <li style="padding-left:36px"><b>Tizim xabari (System Prompt)</b> &mdash; AI yordamchiga yo'riqnoma. Masalan: "Siz Andijon SSB saytining yordamchisisiz. Faqat sog'liqni saqlash va tashkilot haqida javob bering."</li>
+    <li style="padding-left:36px"><b>Salomlashuv xabari</b> &mdash; chat ochilaganda birinchi ko'rinadigan matn (3 tilda)</li>
+    <li><b>2-qadam &mdash; Bilimlar bazasi:</b> AI shu ma'lumotlar asosida aniq javob beradi</li>
+    <li style="padding-left:36px">Har bir yozuv: <b>kategoriya</b> (umumiy, xizmatlar, aloqa, FAQ...) + <b>sarlavha</b> + <b>matn</b></li>
+    <li style="padding-left:36px">Misol yozuvlar: qabul vaqti, shifokorlar ro'yxati, manzil, telefon, poliklinika manzillari, xizmatlar narxi</li>
+    <li style="padding-left:36px">Qanchalik ko'p va aniq ma'lumot kiritilsa, AI shunchalik to'g'ri javob beradi</li>
+    <li><b>Faol/O'chiq</b> &mdash; "Faol" belgilansa saytda chat tugmasi ko'rinadi, olib tashlansa &mdash; yashiriladi</li>
+  </ul>
+  <div class="tip" style="margin-top:12px">
+    <b>Maslahat:</b> Bilimlar bazasiga quyidagi ma'lumotlarni kiriting: 1) Tashkilot haqida qisqa ma'lumot, 2) Qabul vaqti va tartibi, 3) Ko'p beriladigan savollar va javoblar, 4) Poliklinikalar ro'yxati, 5) Shifokor ixtisosliklari.
+  </div>
+</div>
+
 <div class="tip">
   <b>Eslatma:</b> O'zgartirishlar saqlangandan so'ng saytni yangilang (F5) &mdash; o'zgarishlar darhol ko'rinadi.
   Server qayta ishga tushirilishi shart emas. Biror muammo yuzaga kelsa, IT mutaxassisingizga murojaat qiling.
@@ -341,6 +387,42 @@ GUIDE_HTML = """<!DOCTYPE html>
   </ul>
 </div>
 
+<div class="section">
+  <h2><span class="num">13</span> Махсус саҳифалар яратиш</h2>
+  <p class="where">Қаерда: <a href="/admin/core/custompage/">Сайт бошқаруви &rarr; Махсус саҳифалар</a></p>
+  <ul>
+    <li><b>Янги саҳифа қўшиш:</b> "Махсус саҳифа қўшиш" тугмасини босинг, сарлавҳа киритинг &mdash; URL (slug) автоматик тўлдирилади</li>
+    <li><b>Slug (URL манзил)</b> &mdash; фақат кичик лотин ҳарфлари ва "-" белгиси. Масалан: <code>xizmatlar</code> &rarr; сайтда <code>/xizmatlar</code> манзилида очилади</li>
+    <li><b>Асосий мenyuga қўшиш</b> &mdash; белгиланса, саҳифа автоматик навигация мenyusida пайдо бўлади</li>
+    <li><b>Контент блоклари</b> &mdash; саҳифани сақлагандан сўнг "Blok qo'shish" орқали блоклар қўшинг:</li>
+    <li style="padding-left:36px"><b>Матн блоки</b> &mdash; сарлавҳа ва матн (HTML теглар қўллаб-қувватланади)</li>
+    <li style="padding-left:36px"><b>Расм + Матн</b> &mdash; бир томонда расм, иккинчи томонда матн</li>
+    <li style="padding-left:36px"><b>Картичкалар</b> &mdash; хизматлар, йўналишлар учун картичкалар тўплами</li>
+    <li style="padding-left:36px"><b>Чақириқ (CTA)</b> &mdash; диққатни тортувчи сарлавҳа ва тугма ҳаволаси</li>
+    <li><b>Тартиб рақами</b> &mdash; кичик сон = саҳифада юқорида туради</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">14</span> AI Ёрдамчи &mdash; созлаш ва билимлар базаси</h2>
+  <p class="where">Қаерда: <a href="/admin/chat/aiconfig/">AI Ёрдамчи &rarr; AI Ёрдамчи созламалари</a> ва <a href="/admin/chat/knowledgeitem/">Билимлар базаси</a></p>
+  <ul>
+    <li>Сайтнинг ўнг пастки бурчагида сузувчи chat тугмаси &mdash; фойдаланувчилар савол бериб, тезкор жавоб олади</li>
+    <li><b>1-қадам &mdash; AI созламалари:</b></li>
+    <li style="padding-left:36px"><b>Провайдер</b> &mdash; Groq (тавсия, бепул), OpenRouter, OpenAI ёки Google Gemini</li>
+    <li style="padding-left:36px"><b>API калит</b> &mdash; танланган провайдер сайтидан олинган махфий калит</li>
+    <li style="padding-left:36px"><b>Тизим хабари</b> &mdash; AI ёрдамчига йўриқнома матни</li>
+    <li style="padding-left:36px"><b>Саломлашув хабари</b> &mdash; chat очилганда биринчи кўринадиган матн (3 тилда)</li>
+    <li><b>2-қадам &mdash; Билимлар базаси:</b> AI шу маълумотлар асосида аниқ жавоб беради</li>
+    <li style="padding-left:36px">Ҳар бир ёзув: категория + сарлавҳа + матн</li>
+    <li style="padding-left:36px">Масалан: қабул вақти, шифокорлар рўйхати, манзил, телефон, хизматлар нархи</li>
+    <li><b>Фаол/Ўчиқ</b> &mdash; "Фаол" белгиланса сайтда chat тугмаси кўринади</li>
+  </ul>
+  <div class="tip" style="margin-top:12px">
+    <b>Маслаҳат:</b> Groq бепул ва тез. <code>console.groq.com/keys</code> дан API калит олиб, модел: <code>llama3-8b-8192</code> киритинг.
+  </div>
+</div>
+
 <div class="tip">
   <b>Эслатма:</b> Ўзгартиришлар сақлангандан сўнг сайтни янгиланг (F5) &mdash; ўзгаришлар дарҳол кўринади.
 </div>
@@ -471,6 +553,47 @@ GUIDE_HTML = """<!DOCTYPE html>
     <li><b>Адрес, телефон, email</b> &mdash; в "Общей информации"</li>
     <li>Весь текст, цвета, изображения и ссылки меняются через админ-панель &mdash; без вмешательства в код</li>
   </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">13</span> Создание произвольных страниц</h2>
+  <p class="where">Где: <a href="/admin/core/custompage/">Управление сайтом &rarr; Произвольные страницы</a></p>
+  <ul>
+    <li><b>Создать новую страницу:</b> нажмите "Добавить произвольную страницу", введите название &mdash; URL (slug) заполнится автоматически</li>
+    <li><b>Slug (URL-адрес)</b> &mdash; только строчные латинские буквы и "-". Например: <code>uslugi</code> &rarr; на сайте откроется по адресу <code>/uslugi</code></li>
+    <li><b>Добавить в меню</b> &mdash; если отметить, страница автоматически появится в навигационном меню</li>
+    <li><b>Блоки контента</b> &mdash; после сохранения страницы добавьте блоки через "Добавить блок":</li>
+    <li style="padding-left:36px"><b>Текстовый блок</b> &mdash; заголовок и текст (поддерживается HTML)</li>
+    <li style="padding-left:36px"><b>Изображение + Текст</b> &mdash; с одной стороны изображение, с другой текст</li>
+    <li style="padding-left:36px"><b>Карточки</b> &mdash; набор карточек для услуг или направлений</li>
+    <li style="padding-left:36px"><b>Призыв к действию (CTA)</b> &mdash; заметный заголовок и кнопка-ссылка</li>
+    <li><b>Порядковый номер</b> &mdash; меньшее число = выше на странице</li>
+  </ul>
+</div>
+
+<div class="section">
+  <h2><span class="num">14</span> AI Помощник &mdash; настройка и база знаний</h2>
+  <p class="where">Где: <a href="/admin/chat/aiconfig/">AI Помощник &rarr; Настройки AI помощника</a> и <a href="/admin/chat/knowledgeitem/">База знаний</a></p>
+  <ul>
+    <li>Плавающая кнопка чата в правом нижнем углу сайта &mdash; пользователи задают вопросы и получают мгновенные ответы</li>
+    <li><b>Шаг 1 &mdash; Настройки AI:</b></li>
+    <li style="padding-left:36px"><b>Провайдер</b> &mdash; выберите один из AI-сервисов:</li>
+    <li style="padding-left:54px"><b>Groq</b> (рекомендуется, бесплатно) &mdash; <code>console.groq.com/keys</code>, модель: <code>llama3-8b-8192</code></li>
+    <li style="padding-left:54px"><b>OpenRouter</b> &mdash; <code>openrouter.ai/keys</code>, модель: <code>mistralai/mistral-7b-instruct</code></li>
+    <li style="padding-left:54px"><b>OpenAI</b> &mdash; <code>platform.openai.com/api-keys</code>, модель: <code>gpt-4o-mini</code></li>
+    <li style="padding-left:54px"><b>Google Gemini</b> &mdash; <code>aistudio.google.com/app/apikey</code>, модель: <code>gemini-1.5-flash</code></li>
+    <li style="padding-left:36px"><b>API-ключ</b> &mdash; секретный ключ, полученный на сайте выбранного провайдера</li>
+    <li style="padding-left:36px"><b>Системное сообщение</b> &mdash; инструкция для AI. Например: "Вы помощник сайта Андижанского областного управления здравоохранения. Отвечайте только на вопросы о здоровье и организации."</li>
+    <li style="padding-left:36px"><b>Приветственное сообщение</b> &mdash; текст при открытии чата (на 3 языках)</li>
+    <li><b>Шаг 2 &mdash; База знаний:</b> AI отвечает на основе этих данных</li>
+    <li style="padding-left:36px">Каждая запись: категория + заголовок + текст</li>
+    <li style="padding-left:36px">Примеры: время приёма, список врачей, адрес, телефон, список поликлиник, стоимость услуг</li>
+    <li style="padding-left:36px">Чем больше точных данных, тем точнее ответы AI</li>
+    <li><b>Активен/Отключён</b> &mdash; при отметке "Активен" кнопка чата отображается на сайте</li>
+  </ul>
+  <div class="tip" style="margin-top:12px">
+    <b>Совет:</b> Groq &mdash; самый быстрый и бесплатный вариант. Получите ключ на <code>console.groq.com/keys</code> и укажите модель <code>llama3-8b-8192</code>.
+  </div>
 </div>
 
 <div class="tip">
