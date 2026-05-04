@@ -22,3 +22,10 @@ logs
 .env
 .env.*
 !.env.example
+
+# Sensitive deployment files - NEVER commit
+PROJECT_PLAN.md
+deploy_script.py
+install.py
+install.sh
+*.sh
