@@ -61,8 +61,12 @@
 
           <!-- Not configured notice -->
           <div v-if="!chatActive && !loading" class="msg-row msg-assistant">
-            <div class="msg-bubble" style="background:#fff8e1;border:1px solid #fde68a;border-bottom-left-radius:4px;max-width:90%;font-size:13px;color:#92400e;">
-              <p>⚙️ {{ notConfiguredText }}</p>
+            <div class="notice-bubble">
+              <svg class="notice-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+              </svg>
+              <p>{{ notConfiguredText }}</p>
             </div>
           </div>
 
@@ -509,5 +513,28 @@ function autoResize(e) {
 @keyframes chat-out {
   from { opacity: 1; transform: scale(1); transform-origin: bottom right; }
   to   { opacity: 0; transform: scale(0.9) translateY(8px); }
+}
+
+/* ── Not-configured notice ───────────────────── */
+.notice-bubble {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #fffbeb;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  border-bottom-left-radius: 4px;
+  padding: 9px 12px;
+  max-width: 88%;
+  font-size: 13px;
+  color: #92400e;
+  line-height: 1.5;
+}
+.notice-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #d97706;
 }
 </style>
